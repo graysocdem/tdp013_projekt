@@ -1,0 +1,29 @@
+body {
+    font-family: Arial;
+    background-color: lightblue;
+    text-align: center;
+}
+
+#wrapper {
+    background-color: gray;
+    margin: auto;
+    width: 90vw;
+    height: 90vh;
+}
+
+#tweetdiv {
+    border-style: solid;
+    height: 35%;
+}
+
+#tweetbox {
+    border-style: solid;
+    height: 60%;
+    width: 60%;
+    margin-left: 5%; 
+    background-color: green;
+}
+
+#postdiv {
+
+}
