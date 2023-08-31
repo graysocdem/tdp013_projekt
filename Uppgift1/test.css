@@ -1,7 +1,6 @@
 body {
     font-family: Arial;
     background-color: lightblue;
-    text-align: center;
 }
 
 #wrapper {
@@ -14,16 +13,41 @@ body {
 #tweetdiv {
     border-style: solid;
     height: 35%;
+    text-align: center;
 }
 
 #tweetbox {
+    float: left;
     border-style: solid;
+    border-radius: 10px;
     height: 60%;
-    width: 60%;
+    width: 65%;
     margin-left: 5%; 
-    background-color: green;
+    background-color: white;
+    text-align: left;
+    font-size: 1.25em;
+    overflow: auto;
+}
+
+#tweetbox p {
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 1.5%;
 }
 
 #postdiv {
+    float: right;
+    border-style: solid;
+    border-radius: 20px;
+    height: 60%;
+    width: 20%;
+    margin-right: 4%; 
+    background-color: blue;
+    font-size: 2.5em;
+    overflow: hidden;
+}
 
+#postdiv p {
+    margin-left: 2%;
+    margin-top: 40%;
 }
