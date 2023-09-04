@@ -5,6 +5,9 @@
     <link rel="stylesheet" type="text/css" href="test.css" >
     <meta name="description" content="Our first page">
     <meta name="keywords" content="html tutorial template">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+
 </head>
 
 <body>
@@ -15,19 +18,21 @@
             </div>
             
             <div id="tweetbox">
-                <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis mollis dolor, pretium aliquet orci. Nam in finibus felis, vitae accumsan ante. Cras a nisl elit. Curabitur commodo turpis sed nulla imperdiet tincidunt. Etiam imperdiet dolor eget pharetra posuere. Donec maximus aliquam leo quis suscipit. Integer ullamcorper libero ac leo vehicula, non suscipit mi euismod. Nunc id dui quis ex hendrerit euismod. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed tristique nisl metus, sit amet molestie felis efficitur eu. Donec rutrum tortor nisi. Mauris ullamcorper et augue non vestibulum.
-
-                </p>
+                <div class="form-group">
+                    <!-- <input class="form-control" id="inputdefault" type="text"> -->
+                    <textarea class="form-control" rows="7"></textarea>
+                </div>
+                <!-- <textarea id="message" class="form-control" rows="3" placeholder="Skriv ditt meddelande..."></textarea><br> -->
             </div>
 
             <div id="postdiv">
-                <p><b>Post</b></p>
+                <input type="text" id="author" class="form-control" placeholder="Ditt namn"><br>
+                <button class="btn btn-primary" onclick="publishMessage()">Post</button>
             </div>
             
         </div>
     </div>
-
-
+    <script src="test.js"></script>
     
 </body>
 

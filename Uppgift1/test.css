@@ -17,16 +17,19 @@ body {
 }
 
 #tweetbox {
-    float: left;
+    width: 65%;
+    margin-top: 2%;
+    margin-left: 5%;
+
+
+    /*float: left;
     border-style: solid;
     border-radius: 10px;
-    height: 60%;
-    width: 65%;
-    margin-left: 5%; 
+
     background-color: white;
     text-align: left;
     font-size: 1.25em;
-    overflow: auto;
+    overflow: auto;*/
 }
 
 #tweetbox p {
