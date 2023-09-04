@@ -1,8 +1,4 @@
 
-
-
-
-
 function publishMessage()
 {
     author = document.getElementById('author').value;
@@ -62,7 +58,7 @@ function showMessage(messageObject)
     card.appendChild(cardBody);
     card.appendChild(cardFooter);
 
-    container.appendChild(card);
+    container.prepend(card); //ÄNDRAD RAD, appendChild() -> prepend(). Lägger nyaste inlägg först genom att lägga den "först i child-listan".
 }
 
 function clearFields() 

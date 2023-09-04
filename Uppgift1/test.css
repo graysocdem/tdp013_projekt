@@ -1,62 +1,28 @@
-body {
-    font-family: Arial;
-    background-color: lightblue;
-}
-
-#fauxwrapper {
-    background-color: gray;
-    margin: auto;
-    width: 80vw;
-    height: 100vh;
-}
-
 .wrapper {
-    height: 35vh;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    width: 60vw;
-    background-color: green;
+    width: 90%;
+    max-width: 700px;
+    margin: auto;
 }
 
- #tweetbox {
-    margin-top: 2%;
-    width: 100%;
-    height: 70%;
-    background-color: purple;
-} 
+h1 {
+    text-align: center;
+}
 
-#textbox {
-    margin-left: 8%;
-    float: left;
-    width: 60%;
+#message {
+    font-size: 25px;
 }
 
 #postbtndiv {
-    float: right;
-    width: 100%;
-} 
-
-#postbtn {
-    width: 25%;
-    height: 97%;
-    margin-top: 0.5%;
+    margin-top: 8px;
+    margin-bottom: 0px;
+    text-align: center;
 }
 
-.tweet {
-    margin: auto;
-    width: 80%;
-    height: 15vh;
-    margin-bottom: 2vh;
-    background-color: red;
+#postbtn {
+    width: 100%;
+    border-radius: 10px;
 }
 
 .card {
-    margin-bottom: 5%;
-    
-}
-
-
-.btn-secondary {
-    margin: 5px;
+    margin-bottom: 1em;
 }
