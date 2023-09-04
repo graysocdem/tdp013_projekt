@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Our Funky HTML Page</title>
-    <link rel="stylesheet" type="text/css" href="test.css" >
+    <!-- <link rel="stylesheet" type="text/css" href="test.css" > -->
     <meta name="description" content="Our first page">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -24,14 +24,11 @@
             <div id="tweetbox">
             <!-- Här ligger textbox -->
                 <div class="form-group" id="textbox">
-                        <input type="text" id="author" class="form-control" placeholder="Ditt namn" style="margin-bottom: 1%;">
+                        <input type="text" id="author" class="form-control" placeholder="Ditt namn" style="margin-bottom: 1%; margin-top: 1%;">
                         <textarea id="message" class="form-control" rows="5" style="resize: none;" placeholder="Ditt meddelande"></textarea>
                         <div id="error-message" class="alert alert-danger mt-2" role="alert" style="background-color: lightblue"></div>
                 </div>
-
-                <!-- <div id="postbtndiv">  -->
                     <button class="btn btn-primary" id="postbtn" onclick="publishMessage()">Post</button>
-                
             </div> 
 
 
@@ -45,9 +42,6 @@
                     <div class="card-footer"></div>
                 </div>
             </div>
-
-
-            
         </div> 
     </div>
     <script src="test.js"></script>
