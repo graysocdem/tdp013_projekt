@@ -5,7 +5,6 @@ body {
 
 #fauxwrapper {
     background-color: gray;
-    margin-top: 1vh;
     margin: auto;
     width: 80vw;
     height: 100vh;
@@ -17,26 +16,25 @@ body {
     margin-left: auto;
     margin-right: auto;
     width: 60vw;
+    background-color: green;
 }
 
-#tweetbox {
-    width: 60%;
-    float: left;
+ #tweetbox {
     margin-top: 2%;
+    width: 100%;
+    background-color: purple;
+} 
+
+#textbox {
+    margin-left: 8%;
+    float: left;
+    width: 60%;
 }
 
 #postbtndiv {
-    margin-top: 2%;
-    width: 40%;
-    height: 71%;
     float: right;
-}
-
-#postbtn {
-    width: 80%;
-    height: 100%;
-    font-size: 100px;
-}
+    width: 100%;
+} 
 
 .tweet {
     margin: auto;
@@ -46,4 +44,12 @@ body {
     background-color: red;
 }
 
+.card {
+    margin-bottom: 5%;
+    
+}
 
+
+.btn-secondary {
+    margin: 5px;
+}

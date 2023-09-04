@@ -57,6 +57,15 @@ function showMessage(messageObject)
     const cardFooter = document.createElement('div');
     cardFooter.className = 'card-footer';
     cardFooter.innerText = messageObject.timestamp;
+    
+
+    const button = document.createElement('button')
+    readButton.innerText = 'Mark as Read';
+    readButton.className = 'btn btn-secondary';
+    readButton.addEventListener('click', seenTweet);
+
+    
+    cardHeader.appendChild(readButton);
 
     card.appendChild(cardHeader);
     card.appendChild(cardBody);
@@ -64,6 +73,13 @@ function showMessage(messageObject)
 
     container.appendChild(card);
 }
+
+function seenTweet(event)
+{
+    const card = event.target.closest('.card');
+    card.style.backgroundColor = 'lightgreen';
+}
+
 
 function clearFields() 
 {

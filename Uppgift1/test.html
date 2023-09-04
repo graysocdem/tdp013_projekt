@@ -4,9 +4,7 @@
     <title>Our Funky HTML Page</title>
     <link rel="stylesheet" type="text/css" href="test.css" >
     <meta name="description" content="Our first page">
-    <meta name="keywords" content="html tutorial template">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"> 
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 
     
 
@@ -22,49 +20,38 @@
                 <h1>Tweeeter</h1>
             </div>
             
+            
             <div id="tweetbox">
-                <div class="form-group">
-                    <input type="text" id="author" class="form-control" placeholder="Ditt namn"><br>
-                    <textarea id="message" class="form-control" rows="9" style="resize: none;" placeholder="Ditt meddelande"></textarea>
+            <!-- Här ligger textbox -->
+                <div class="form-group" id="textbox">
+                        <input type="text" id="author" class="form-control" placeholder="Ditt namn" style="margin-bottom: 1%;">
+                        <textarea id="message" class="form-control" rows="5" style="resize: none;" placeholder="Ditt meddelande"></textarea>
+                        <div id="error-message" class="alert alert-danger mt-2" role="alert" style="background-color: lightblue"></div>
                 </div>
-            </div>          
 
-            <div id="postbtndiv">
-                <button class="btn btn-primary btn-lg" id="postbtn" onclick="publishMessage()">Post</button>
-                <div id="error-message" class="alert alert-danger mt-2" role="alert" style="display:none;"></div>
-            </div>
-        </div>
+                <!-- <div id="postbtndiv">  -->
+                    <button class="btn btn-primary" id="postbtn" onclick="publishMessage()">Post</button>
+                
+            </div> 
 
 
         <hr color="black" size="5px"/>
 
         <!-- <div class="wrapper" style="background-color: purple;"> -->
             <div class="container"> 
-                <div class="panel panel-default">
-                    <div class="panel-heading">Author</div>
-                    <div class="panel-body" style="font-size: 20px; overflow: visible;">Content</div>
-                    <div class="panel-footer">Date</div>
+                <div class="card" style="display: none;">
+                    <div class="card-header"></div>
+                    <div class="card-body" style="font-size: 20px; overflow: visible;"></div>
+                    <div class="card-footer"></div>
                 </div>
             </div>
 
 
-            <div class="tweet">
-                abababa
-            </div>
-            <div class="tweet">
-                abababa
-            </div>
-        <!-- </div> -->
+            
+        </div> 
     </div>
     <script src="test.js"></script>
 
-    <div class="container">
-        <div class="panel panel-default">
-            <div class="panel-heading">Panel123123 Heading</div>
-            <div class="panel-body">Panel123123 Content</div>
-        </div>
-
-    </div>
 
 
 
