@@ -26,3 +26,16 @@ h1 {
 .card {
     margin-bottom: 1em;
 }
+
+#error-message {
+    display: none;
+}
+
+.read {
+    background-color: blue;
+}
+
+.read-checkbox {
+    margin-left: 10px;
+}
+
