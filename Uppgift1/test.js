@@ -25,8 +25,8 @@ function publishMessage()
 
     const timestamp = new Date().toLocaleString();
     const messageObject = {author, message, timestamp}
-    //setCookie(author, message, timestamp);
-    //getCookies();
+    setCookie(author, message, timestamp);
+    publishCookies();
 
     clearFields();
     showMessage(messageObject);
@@ -95,25 +95,54 @@ function toggleCheckbox(event)
 
 function clearFields() 
 {
-    document.getElementById('author').value = '';
-    document.getElementById('message').value = '';
+    document.getElementById('a').value = '';
+    document.getElementById('m').value = '';
 }
 
-// function setCookie(author, message, time) {
-//     if getCookie
-//     console.log("asdlkföjasdölf");
-//     const d = new Date();
-//     d.setTime(d.getTime() + (24*60*60*1000));
-//     let expires = "expires=" + d.toUTCString();
-//     const payload = [author, message, time];
-//     document.cookie = time + "=" + payload + ";" + expires + ";path=/";
-// }
+function setCookie(author, message, time) {
 
-// function getCookies() {
-//     cookies = document.cookie.split(";")
-//     console.log(cookies)
+    const d = new Date();
+    d.setTime(d.getTime() + (24*60*60*1000));
+    let expires = "expires=" + d.toUTCString();
 
-//     console.log("hej")
-// }
+    document.cookie = encodeURIComponent(time + "a") + "=" + encodeURIComponent(author) + ";" + expires + ";path=/";
+    document.cookie = encodeURIComponent(time + "m") + "=" + encodeURIComponent(message) + ";" + expires + ";path=/";
 
-// hej;jag;heter;oskar
+}
+
+function publishCookies() {
+    cookies = document.cookie
+
+    encodedCookieList = cookies.split(";")
+
+    author = ""
+    message = ""
+    time = ""
+
+    for (i = 0; i <= encodedCookieList.length-1; i++) {
+
+        current = encodedCookieList[i];
+
+        templist = current.split("=");
+        identifier = templist[0] 
+        payload = templist[1]
+
+        if (identifier[identifier.length-1] == "a") {
+            author = decodeURIComponent(payload)
+        } 
+        else if (identifier[identifier.length-1] == "m") {
+            message = decodeURIComponent(payload)
+            identifier = identifier.substring(1, identifier.length-1) //Dom får ett konstigt mellanslag i början, därmed 1.
+            timestamp = decodeURIComponent(identifier)
+            const messageObject = {author, message, timestamp}
+            showMessage(messageObject)
+            author = ""
+            message = ""
+            time = ""
+        }
+    }
+
+    decodedCookieList = decodeURIComponent(encodedCookieList)
+    console.log(decodedCookieList, "hej")
+
+}
