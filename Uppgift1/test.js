@@ -24,6 +24,7 @@ function publishMessage()
     }
 
     const timestamp = new Date().toLocaleString();
+    console.log(timestamp, "timestamp")
     const messageObject = {author, message, timestamp, read}
     setCookie(author, message, timestamp, read);
     clearFields();
@@ -36,37 +37,47 @@ function showMessage(messageObject)
 
     const card  = document.createElement('div');
     card.className = 'card';
+    card.author = messageObject.author
+    card.message = messageObject.message
+    card.timestamp = messageObject.timestamp
+    card.read = messageObject.read
 
     const cardHeader = document.createElement('div');
     cardHeader.className = 'card-header';
-    cardHeader.innerText = messageObject.author;
-    card.header = cardHeader
+
+    cardHeader.innerText = card.author;
 
     const cardBody = document.createElement('div');
     cardBody.className = 'card-body';
-    card.body = cardBody
 
     const cardText = document.createElement('p');
     cardText.className = 'card-text';
-    cardText.innerText = messageObject.message;
-    cardBody.text = cardText
+    cardText.innerText = card.message;
 
     cardBody.appendChild(cardText);
 
     const cardFooter = document.createElement('div');
     cardFooter.className = 'card-footer';
-    cardFooter.innerText = messageObject.timestamp;
-    card.footer = cardFooter
+    cardFooter.innerText = card.timestamp;
 
     //------------------------------------------
-    const cardCheckbox = document.createElement('input');
+    cardCheckbox = document.createElement('input');
     cardCheckbox.type = 'checkbox';
     cardCheckbox.className = 'read-checkbox';
+
+
+    if (card.read == "true") {
+        cardCheckbox.checked = true
+    }
+    else {
+        cardCheckbox.checked = false
+    }
+
     cardCheckbox.addEventListener('change', toggleCheckbox);
     card.checkbox = cardCheckbox
 
-    const checkboxText = document.createElement('lable');
-    checkboxText.innerText = 'Har läst';
+    const checkboxText = document.createElement('label');
+    checkboxText.innerText = ' Har läst';
     checkboxText.insertBefore(cardCheckbox, checkboxText.firstChild);
 
     cardHeader.appendChild(checkboxText);
@@ -84,21 +95,20 @@ function toggleCheckbox(event)
 {
     const card = event.target.closest('.card');
     
-    posts = getCookies()
     if (event.target.checked)
     {
-        card.classList.add('read');
-        setCookie(card.author, card.message, card.footer.innerText,)
-        posts[card.footer.innerText][2] = true
+        card.read = "true"
+        console.log(new Date(card.timestamp).toLocaleString(), "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        setCookie(card.author, card.message, new Date(card.timestamp).toLocaleString(), true)
+        console.log(document.cookie, "sanna cookies!!!!")
     }   
     else
     {
-        card.classList.remove('read');
-        posts[card.footer.innerText][2] = false
+        card.read = "false"
+        setCookie(card.author, card.message, card.timestamp.toLocaleString(), false)
+        console.log(document.cookie, "falska cookies!!!!")
+
     }
-
-    document.getCookie
-
 }
 
 function clearFields() 
@@ -113,6 +123,8 @@ function setCookie(author, message, time, read) {
     d.setTime(d.getTime() + (24*60*60*1000));
     let expires = "expires=" + d.toUTCString();
 
+    console.log(time, "alsökjfölasdkjf")
+
     payload = encodeURIComponent(author) + ',' + encodeURIComponent(message) + ',' + encodeURIComponent(read);
     document.cookie = encodeURIComponent(time) + "=" + payload + ";" + expires + ";path=/";
 }
@@ -120,7 +132,6 @@ function setCookie(author, message, time, read) {
 function getCookies() {
 
     cookies = document.cookie
-
     encodedCookieList = cookies.split(";")
     
     posts = {}
@@ -150,7 +161,19 @@ function getCookies() {
 }
 
 function publishCookies(posts) {
+    console.log(posts)
+
+    console.log("unsorted", posts)
+
     
+    posts = Object.keys(posts).sort().reduce(function(accumulator, key) {
+            console.log(key)
+            accumulator[key] = posts[key]
+            return accumulator
+        }, {})
+
+    console.log("sorted", posts)
+
     for (let timestamp in posts) {
         payload = posts[timestamp]
 
@@ -159,7 +182,6 @@ function publishCookies(posts) {
         read = payload[2]
         messageObject = {author, message, timestamp, read}
 
-        console.log("messageObject", messageObject)
         showMessage(messageObject)
     }
 }
