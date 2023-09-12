@@ -4,8 +4,8 @@ function publishMessage()
     author = document.getElementById('author').value;
     const message = document.getElementById('message').value;
     const errorMessageDiv = document.getElementById('error-message');
+    const read = false;
 
-    console.log("gehh")
     if (author.length == 0)
     {
         console.log("hej")
@@ -24,10 +24,8 @@ function publishMessage()
     }
 
     const timestamp = new Date().toLocaleString();
-    const messageObject = {author, message, timestamp}
-    setCookie(author, message, timestamp);
-    publishCookies();
-
+    const messageObject = {author, message, timestamp, read}
+    setCookie(author, message, timestamp, read);
     clearFields();
     showMessage(messageObject);
 }
@@ -42,33 +40,37 @@ function showMessage(messageObject)
     const cardHeader = document.createElement('div');
     cardHeader.className = 'card-header';
     cardHeader.innerText = messageObject.author;
+    card.header = cardHeader
 
     const cardBody = document.createElement('div');
     cardBody.className = 'card-body';
+    card.body = cardBody
 
     const cardText = document.createElement('p');
     cardText.className = 'card-text';
     cardText.innerText = messageObject.message;
+    cardBody.text = cardText
 
     cardBody.appendChild(cardText);
 
     const cardFooter = document.createElement('div');
     cardFooter.className = 'card-footer';
     cardFooter.innerText = messageObject.timestamp;
+    card.footer = cardFooter
 
     //------------------------------------------
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'read-checkbox';
-    checkbox.addEventListener('change', toggleCheckbox);
+    const cardCheckbox = document.createElement('input');
+    cardCheckbox.type = 'checkbox';
+    cardCheckbox.className = 'read-checkbox';
+    cardCheckbox.addEventListener('change', toggleCheckbox);
+    card.checkbox = cardCheckbox
 
     const checkboxText = document.createElement('lable');
     checkboxText.innerText = 'Har läst';
-    checkboxText.insertBefore(checkbox, checkboxText.firstChild);
+    checkboxText.insertBefore(cardCheckbox, checkboxText.firstChild);
 
     cardHeader.appendChild(checkboxText);
     //------------------------------------------
-
 
     card.appendChild(cardHeader);
     card.appendChild(cardBody);
@@ -80,69 +82,84 @@ function showMessage(messageObject)
 
 function toggleCheckbox(event)
 {
-
     const card = event.target.closest('.card');
     
-    if (event.taget.checked)
+    posts = getCookies()
+    if (event.target.checked)
     {
         card.classList.add('read');
-    }else
+        setCookie(card.author, card.message, card.footer.innerText,)
+        posts[card.footer.innerText][2] = true
+    }   
+    else
     {
         card.classList.remove('read');
+        posts[card.footer.innerText][2] = false
     }
+
+    document.getCookie
 
 }
 
 function clearFields() 
 {
-    document.getElementById('a').value = '';
-    document.getElementById('m').value = '';
+    document.getElementById('author').value = '';
+    document.getElementById('message').value = '';
 }
 
-function setCookie(author, message, time) {
+function setCookie(author, message, time, read) {
 
     const d = new Date();
     d.setTime(d.getTime() + (24*60*60*1000));
     let expires = "expires=" + d.toUTCString();
 
-    document.cookie = encodeURIComponent(time + "a") + "=" + encodeURIComponent(author) + ";" + expires + ";path=/";
-    document.cookie = encodeURIComponent(time + "m") + "=" + encodeURIComponent(message) + ";" + expires + ";path=/";
-
+    payload = encodeURIComponent(author) + ',' + encodeURIComponent(message) + ',' + encodeURIComponent(read);
+    document.cookie = encodeURIComponent(time) + "=" + payload + ";" + expires + ";path=/";
 }
 
-function publishCookies() {
+function getCookies() {
+
     cookies = document.cookie
 
     encodedCookieList = cookies.split(";")
-
-    author = ""
-    message = ""
-    time = ""
+    
+    posts = {}
 
     for (i = 0; i <= encodedCookieList.length-1; i++) {
-
         current = encodedCookieList[i];
 
         templist = current.split("=");
-        identifier = templist[0] 
-        payload = templist[1]
+        timestamp = decodeURIComponent(templist[0])
 
-        if (identifier[identifier.length-1] == "a") {
-            author = decodeURIComponent(payload)
-        } 
-        else if (identifier[identifier.length-1] == "m") {
-            message = decodeURIComponent(payload)
-            identifier = identifier.substring(1, identifier.length-1) //Dom får ett konstigt mellanslag i början, därmed 1.
-            timestamp = decodeURIComponent(identifier)
-            const messageObject = {author, message, timestamp}
-            showMessage(messageObject)
-            author = ""
-            message = ""
-            time = ""
+        //pga konstigt mellanslag som dyker upp i början på alla utom 1a timestampen
+        if (timestamp[0] == " ") {
+            timestamp = timestamp.substring(1) 
         }
+
+        payload = templist[1].split(',')
+
+        for (let i in payload) {
+            payload[i] = decodeURIComponent(payload[i]) 
+        }
+        posts[timestamp] = payload
+
     }
 
-    decodedCookieList = decodeURIComponent(encodedCookieList)
-    console.log(decodedCookieList, "hej")
+    return posts
 
+}
+
+function publishCookies(posts) {
+    
+    for (let timestamp in posts) {
+        payload = posts[timestamp]
+
+        author = payload[0]
+        message = payload[1]
+        read = payload[2]
+        messageObject = {author, message, timestamp, read}
+
+        console.log("messageObject", messageObject)
+        showMessage(messageObject)
+    }
 }
