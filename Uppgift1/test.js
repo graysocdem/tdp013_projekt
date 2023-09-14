@@ -8,7 +8,6 @@ function publishMessage()
 
     if (author.length == 0)
     {
-        console.log("hej")
         author = "John Doe"
     }
 
@@ -24,7 +23,6 @@ function publishMessage()
     }
 
     const timestamp = new Date().toLocaleString();
-    console.log(timestamp, "timestamp")
     const messageObject = {author, message, timestamp, read}
     setCookie(author, message, timestamp, read);
     clearFields();
@@ -37,6 +35,7 @@ function showMessage(messageObject)
 
     const card  = document.createElement('div');
     card.className = 'card';
+
     card.author = messageObject.author
     card.message = messageObject.message
     card.timestamp = messageObject.timestamp
@@ -87,8 +86,7 @@ function showMessage(messageObject)
     card.appendChild(cardBody);
     card.appendChild(cardFooter);
 
-    container.prepend(card); //ÄNDRAD RAD, appendChild() -> prepend(). Lägger nyaste inlägg först genom att lägga den "först i child-listan".
-
+    container.prepend(card);
 }
 
 function toggleCheckbox(event)
@@ -98,16 +96,12 @@ function toggleCheckbox(event)
     if (event.target.checked)
     {
         card.read = "true"
-        console.log(new Date(card.timestamp).toLocaleString(), "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        setCookie(card.author, card.message, new Date(card.timestamp).toLocaleString(), true)
-        console.log(document.cookie, "sanna cookies!!!!")
+        setCookie(card.author, card.message, card.timestamp.toLocaleString(), true)
     }   
     else
     {
         card.read = "false"
         setCookie(card.author, card.message, card.timestamp.toLocaleString(), false)
-        console.log(document.cookie, "falska cookies!!!!")
-
     }
 }
 
@@ -122,9 +116,6 @@ function setCookie(author, message, time, read) {
     const d = new Date();
     d.setTime(d.getTime() + (24*60*60*1000));
     let expires = "expires=" + d.toUTCString();
-
-    console.log(time, "alsökjfölasdkjf")
-
     payload = encodeURIComponent(author) + ',' + encodeURIComponent(message) + ',' + encodeURIComponent(read);
     document.cookie = encodeURIComponent(time) + "=" + payload + ";" + expires + ";path=/";
 }
@@ -135,25 +126,21 @@ function getCookies() {
     encodedCookieList = cookies.split(";")
     
     posts = {}
-
     for (i = 0; i <= encodedCookieList.length-1; i++) {
         current = encodedCookieList[i];
-
         templist = current.split("=");
         timestamp = decodeURIComponent(templist[0])
 
         //pga konstigt mellanslag som dyker upp i början på alla utom 1a timestampen
         if (timestamp[0] == " ") {
-            timestamp = timestamp.substring(1) 
+            timestamp = timestamp.substring(1)
         }
 
-        payload = templist[1].split(',')
-
+        payload = templist[1].split(',')        
         for (let i in payload) {
             payload[i] = decodeURIComponent(payload[i]) 
         }
         posts[timestamp] = payload
-
     }
 
     return posts
@@ -161,18 +148,11 @@ function getCookies() {
 }
 
 function publishCookies(posts) {
-    console.log(posts)
 
-    console.log("unsorted", posts)
-
-    
     posts = Object.keys(posts).sort().reduce(function(accumulator, key) {
-            console.log(key)
             accumulator[key] = posts[key]
             return accumulator
         }, {})
-
-    console.log("sorted", posts)
 
     for (let timestamp in posts) {
         payload = posts[timestamp]
