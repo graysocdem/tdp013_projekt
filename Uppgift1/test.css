@@ -39,3 +39,7 @@ h1 {
     margin-left: 10px;
 }
 
+hr {
+    color: black;
+    size: 5px;
+}

@@ -4,9 +4,8 @@
 //kan sätta event listener längst upp i javascriptfil för att undvika onload och onclick (DOMContentLoaded)
 //Lägg till javascriptfilen med resten av imports
 
-function publishMessage()
-{
-    author = document.getElementById('author').value;
+function publishMessage() {
+    const author = document.getElementById('author').value;
     const message = document.getElementById('message').value;
     const errorMessageDiv = document.getElementById('error-message');
     const read = false;
@@ -125,27 +124,27 @@ function setCookie(author, message, time, read) {
     const d = new Date();
     d.setTime(d.getTime() + (24*60*60*1000));
     let expires = "expires=" + d.toUTCString();
-    payload = encodeURIComponent(author) + ',' + encodeURIComponent(message) + ',' + encodeURIComponent(read);
+    const payload = encodeURIComponent(author) + ',' + encodeURIComponent(message) + ',' + encodeURIComponent(read);
     document.cookie = encodeURIComponent(time) + "=" + payload + ";" + expires + ";path=/";
 }
 
 function getCookies() {
 
-    cookies = document.cookie
-    encodedCookieList = cookies.split(";")
+    const cookies = document.cookie
+    const encodedCookieList = cookies.split(";")
     
-    posts = {}
+    let posts = {}
     for (i = 0; i <= encodedCookieList.length-1; i++) {
-        current = encodedCookieList[i];
-        templist = current.split("=");
-        timestamp = decodeURIComponent(templist[0])
+        let current = encodedCookieList[i];
+        const templist = current.split("=");
+        let timestamp = decodeURIComponent(templist[0])
 
         //pga konstigt mellanslag som dyker upp i början på alla utom 1a timestampen
         if (timestamp[0] == " ") {
             timestamp = timestamp.substring(1)
         }
 
-        payload = templist[1].split(',')        
+        let payload = templist[1].split(',')        
         for (let i in payload) {
             payload[i] = decodeURIComponent(payload[i]) 
         }
@@ -164,12 +163,12 @@ function publishCookies(posts) {
         }, {})
 
     for (let timestamp in posts) {
-        payload = posts[timestamp]
+        const payload = posts[timestamp]
 
-        author = payload[0]
-        message = payload[1]
-        read = payload[2]
-        messageObject = {author, message, timestamp, read}
+        const author = payload[0]
+        const message = payload[1]
+        const read = payload[2]
+        const messageObject = {author, message, timestamp, read}
 
         showMessage(messageObject)
     }
