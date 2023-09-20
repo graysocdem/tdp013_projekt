@@ -1,0 +1,17 @@
+GET http://localhost:3000/twidder/getposts
+
+###
+
+GET http://localhost:3000/twidder/12
+
+###
+
+POST http://localhost:3000/twidder
+Content-Type: application/json
+
+{
+    "author": "Oskar",
+    "message": "Borsta tänderna",
+    "timestamp": "22:05:41",
+    "read": true
+}

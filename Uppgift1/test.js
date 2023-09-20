@@ -1,3 +1,8 @@
+//Utgråning av knapp vid "har läst"-itryckning
+
+//ha inte getcookies i html-en.
+//kan sätta event listener längst upp i javascriptfil för att undvika onload och onclick (DOMContentLoaded)
+//Lägg till javascriptfilen med resten av imports
 
 function publishMessage()
 {
@@ -48,6 +53,7 @@ function showMessage(messageObject)
 
     const cardBody = document.createElement('div');
     cardBody.className = 'card-body';
+    card.body = cardBody
 
     const cardText = document.createElement('p');
     cardText.className = 'card-text';
@@ -66,6 +72,7 @@ function showMessage(messageObject)
 
 
     if (card.read == "true") {
+        card.body.style.backgroundColor = "#c9c5c5";
         cardCheckbox.checked = true
     }
     else {
@@ -95,11 +102,13 @@ function toggleCheckbox(event)
     
     if (event.target.checked)
     {
+        card.body.style.backgroundColor = "#c9c5c5";
         card.read = "true"
         setCookie(card.author, card.message, card.timestamp.toLocaleString(), true)
     }   
     else
     {
+        card.body.style.backgroundColor = "white";
         card.read = "false"
         setCookie(card.author, card.message, card.timestamp.toLocaleString(), false)
     }
