@@ -1,0 +1,11 @@
+NODEJS
+
+Node är ett "runtime enviroment" som låter en köra javascript-kod utanför en 
+browser. Används därför för att sätta upp backend i javascript.
+
+Node-applikationer är asynchronous by default. 
+En tråd i node gör alla sina övriga uppgifter som att ta emot requests och serva
+responses, men den kollar även kontinuerligt i en "event queue". Detta gör att en
+tråd kan hantera flera saker. 
+
+Node borde bara användas för dataintensiva applikationer, inte beräkningsintensiva. 

@@ -11,8 +11,7 @@ db.once('open', () => console.log('Connected to Database'))
 
 app.use(express.json())
 
-const twiddeRouter = require('./routes/twidder')
-app.use('/twidder', twiddeRouter )
-
+const messageRouter = require('./routes/messages')
+app.use('/messages', messageRouter )
 
 app.listen(3000, () => console.log('Server Started'))
