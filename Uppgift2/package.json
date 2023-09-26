@@ -4,17 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "devStart": "nodemon server.js"
+    "devStart": "nodemon server.js",
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "mocha": "^10.2.0",
     "mongoose": "^7.5.2"
   },
   "devDependencies": {
+    "chai": "^4.3.8",
     "dotenv": "^16.3.1",
-    "nodemon": "^3.0.1"
+    "istanbul": "^0.4.5",
+    "mocha": "^10.2.0",
+    "nodemon": "^3.0.1",
+    "request": "^2.88.2",
+    "supertest": "^6.3.3"
   }
 }

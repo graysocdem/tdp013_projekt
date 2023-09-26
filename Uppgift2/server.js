@@ -15,3 +15,9 @@ const messageRouter = require('./routes/messages')
 app.use('/messages', messageRouter )
 
 app.listen(3000, () => console.log('Server Started'))
+
+function hej() {
+    return "din mamma"
+}
+
+module.exports = app
