@@ -4,5 +4,5 @@
 
 ## About
 
-web programing course
+Web programing course
 

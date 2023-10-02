@@ -1,0 +1,29 @@
+GET http://localhost:3000/messages
+
+###
+
+GET http://localhost:3000/messages/650b15f6dbba70bc9c6e07fd
+
+###
+
+POST http://localhost:3000/messages
+Content-Type: application/json
+
+{
+    "author": "Emil",
+    "message": "Vifta på öronen",
+    "timestamp": "11:22:33",
+    "read": false
+}
+
+###
+
+PATCH http://localhost:3000/messages/650b15f6dbba70bc9c6e07fd
+
+###
+
+POST http://localhost:3000/asdfasdf
+
+###
+
+POST http://localhost:3000/messages/650add7180d1366c61657172
