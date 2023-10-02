@@ -14,6 +14,6 @@ app.use(express.json())
 const messageRouter = require('./routes/messages')
 app.use('/messages', messageRouter )
 
-app.listen(3000, () => console.log('Server Started'))
+//app.listen(3000, () => console.log('Server Started'))
 
 module.exports = app

@@ -5,9 +5,10 @@ const expect = chai.expect;
 
 describe('Messages API', () => {
 
-  // Testing GET all messages
-  it('should fetch all messages', (done) => {
+  //Testing GET all messages
+  it('should fetch all messages', function(done)  {
     request(app)
+    
       .get('/messages')
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -18,8 +19,8 @@ describe('Messages API', () => {
 
   // Testing POST a message
 
-  it('should save a message', (done) => {
-
+  it('should save a message', function(done)  {
+    
     const post = {
       author: "Emil Gummus",
       message: "Testar ett två ett två",
@@ -36,11 +37,32 @@ describe('Messages API', () => {
       })
   })
 
-  it('should get Emil Gummus\'s post', (done) => {
-    
+  
+  it('should update the read status of a message', function(done) {
+  const MessageId = '651a8ae4e0ec1c07b854ed61';
+  request(app)
+      .patch(`/messages/${MessageId}`)
+      .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(["\"post marked as unread\"", "\"post marked as read\""]).to.include(res.text);
+
+          done();
+      });
+  });
+
+ 
+  it('should fetch a specific message with its ID', function(done) {
+  const MessageId = '651a8ae4e0ec1c07b854ed61';
+
+  request(app)
+      .get(`/messages/${MessageId}`)
+      .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('_id', MessageId);
+          done();
+      });
+  });
 
 
-  }) 
-
-  // Add more tests for other endpoints
 });

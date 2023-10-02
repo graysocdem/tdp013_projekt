@@ -52,8 +52,7 @@ async function messagesPost(req, res) {
     })
     try {
         await post.save()
-        res.status(200)
-        res.send("Post created")
+        res.status(200).send("Post created");
     } catch (err) {
         res.status(400).send("Illegal parameter")
     }
@@ -100,8 +99,9 @@ async function idPatch(req, res) {
 async function idGet(req, res) {
     try {
         const post = await Post.findById(req.params.id)
-        res.json(post)
         res.status(200)
+        res.json(post)
+        
     } catch (err) {
         res.status(400)
     }
