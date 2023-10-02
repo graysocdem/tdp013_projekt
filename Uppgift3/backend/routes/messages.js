@@ -23,7 +23,7 @@ router.all('/:id', async (req, res) => {
 
     //Hämta en med GET
     if (req.method === "GET") {
-        idGet(req, res) //är req & res en pekare?
+        idGet(req, res)
     }
     //Uppdatera en via PATCH
     else if (req.method === "PATCH") {
@@ -74,18 +74,18 @@ async function messagesGet(req, res) {
 async function idPatch(req, res) {
     console.log(req.params.id)
     if (invalidId(req.params.id)) {
-        res.status(400).send("Invalid Parameter")
+        res.status(400).send("Invalid parameter")
         return
     }
 
     const post = await Post.findById(req.params.id)
     if (post.read) {
         post.read = false
-        res.json("post marked as unread")
+        res.json("Post marked as unread.")
     }
     else {
         post.read = true
-        res.json("post marked as read")
+        res.json("Post marked as read.")
     }
 
     try {

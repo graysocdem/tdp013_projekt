@@ -39,7 +39,7 @@ describe('Messages API', () => {
 
   
   it('should update the read status of a message', function(done) {
-  const MessageId = '651a8ae4e0ec1c07b854ed61';
+  const MessageId = '651ab430498114e639e12d27';
   request(app)
       .patch(`/messages/${MessageId}`)
       .end((err, res) => {
@@ -52,7 +52,7 @@ describe('Messages API', () => {
 
  
   it('should fetch a specific message with its ID', function(done) {
-  const MessageId = '651a8ae4e0ec1c07b854ed61';
+  const MessageId = '651ab430498114e639e12d27';
 
   request(app)
       .get(`/messages/${MessageId}`)

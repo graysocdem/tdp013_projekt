@@ -1,8 +1,12 @@
 require('dotenv').config()
 
+
 const express = require('express')
 const app = express()
+var cors = require('cors')
 const mongoose = require('mongoose')
+
+app.use(cors())
 
 mongoose.connect(process.env.DATABASE_URL)
 const db = mongoose.connection   
@@ -14,6 +18,6 @@ app.use(express.json())
 const messageRouter = require('./routes/messages')
 app.use('/messages', messageRouter )
 
-//app.listen(3000, () => console.log('Server Started'))
+app.listen(3000, () => console.log('Server Started'))
 
 module.exports = app
