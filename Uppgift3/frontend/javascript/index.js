@@ -146,71 +146,39 @@ function clearFields() {
     document.getElementById('message').value = '';
 }
 
-function setCookie(author, message, time, read) {
-
-    const d = new Date();
-    d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
-    let expires = "expires=" + d.toUTCString();
-    const payload = encodeURIComponent(author) + ',' + encodeURIComponent(message) + ',' + encodeURIComponent(read);
-    document.cookie = encodeURIComponent(time) + "=" + payload + ";" + expires + ";path=/";
-}
-
 function ajaxFunction() {
+    
+    postList = []
     getPosts()
-    setInterval(getPosts, 5000)
+    setInterval(getNewPosts, 5000, postList)
 }
 
 async function getPosts() {
+    
     const response = await fetch("http://127.0.0.1:3000/messages")
     const posts = await response.json()
+
     for (i in posts) {
         console.log(posts[i])
         showMessage(posts[i])
     }
 }
 
-/*function getCookies() {
-
-    const cookies = document.cookie
-    const encodedCookieList = cookies.split(";")
+async function getNewPosts() {
     
-    let posts = {}
-    for (i = 0; i <= encodedCookieList.length-1; i++) {
-        let current = encodedCookieList[i];
-        const templist = current.split("=");
-        let timestamp = decodeURIComponent(templist[0])
+    const response = await fetch("http://127.0.0.1:3000/messages")
+    const posts = await response.json()
 
-        //pga konstigt mellanslag som dyker upp i början på alla utom 1a timestampen
-        if (timestamp[0] == " ") {
-            timestamp = timestamp.substring(1)
+    const msLastCheck = Date.parse()-5000
+
+    console.log(posts)
+
+    for (i in posts) {
+        console.log()
+        const msTimestamp = Date.parse(posts[i].timestamp)
+        if (msTimestamp > msLastCheck) {
+            console.log(posts[i])
+            showMessage(posts[i])
         }
-
-        let payload = templist[1].split(',')        
-        for (let i in payload) {
-            payload[i] = decodeURIComponent(payload[i]) 
-        }
-        posts[timestamp] = payload
     }
-
-    return posts
-
-}*/
-
-/*function publishCookies(posts) {
-
-    posts = Object.keys(posts).sort().reduce(function(accumulator, key) {
-            accumulator[key] = posts[key]
-            return accumulator
-        }, {})
-
-    for (let timestamp in posts) {
-        const payload = posts[timestamp]
-
-        const author = payload[0]
-        const message = payload[1]
-        const read = payload[2]
-        const messageObject = {author, message, timestamp, read}
-
-        showMessage(messageObject)
-    }
-}*/
+}

@@ -10,9 +10,9 @@ POST http://localhost:3000/messages
 Content-Type: application/json
 
 {
-    "author": "hej",
-    "message": "Snatta på alsdkjfösla",
-    "timestamp": "12:13:14",
+    "author": "qq",
+    "message": "rr",
+    "timestamp": "10/6/2023, 1:00:00 PM",
     "read": false
 }
 
