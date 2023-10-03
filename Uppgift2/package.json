@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "nyc": {
+    "reporter": [
+      "text",
+      "lcov"
+    ],
+    "exclude": [
+      "test/**",
+      "node_modules/**"
+    ],
+    "all": true
+  },
   "scripts": {
     "devStart": "nodemon server.js",
     "test": "nyc mocha"

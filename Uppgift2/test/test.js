@@ -17,6 +17,8 @@ describe('Messages API', () => {
       });
   });
 
+
+
   // Testing POST a message
 
   it('should save a message', function(done)  {
@@ -39,7 +41,7 @@ describe('Messages API', () => {
 
   
   it('should update the read status of a message', function(done) {
-  const MessageId = '651ab430498114e639e12d27';
+  const MessageId = '651a8ae4e0ec1c07b854ed61';
   request(app)
       .patch(`/messages/${MessageId}`)
       .end((err, res) => {
@@ -52,7 +54,7 @@ describe('Messages API', () => {
 
  
   it('should fetch a specific message with its ID', function(done) {
-  const MessageId = '651ab430498114e639e12d27';
+  const MessageId = '651a8ae4e0ec1c07b854ed61';
 
   request(app)
       .get(`/messages/${MessageId}`)
@@ -65,4 +67,45 @@ describe('Messages API', () => {
   });
 
 
+  it('should not save a message with invalid parameters', function(done) {
+    const invalidPost = {
+       author: "",
+       message: "WeeWooo",
+       timestamp: new Date().toISOString(),
+       read: true
+    }
+    request(app)
+       .post('/messages')
+       .send(invalidPost)
+       .end((err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+       });
+  });
+
+
+  
+  it('should not update a post with an invalid ID', function(done) {
+    const invalidId = 'weewoo';
+    request(app)
+       .patch(`/messages/${invalidId}`)
+       .end((err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+       });
+  });
+
+
+  it('should return 405 Method Not Allowed for weird requests', function(done) {
+    request(app)
+       .delete('/messages')
+       .end((err, res) => {
+          expect(res.status).to.equal(405);
+          done();
+       });
+  });
+
+
+
 });
+
