@@ -1,8 +1,11 @@
 import React, { useState, useRef } from 'react'
+import { useNavigate } from 'react-router-dom';
 import bcrypt from 'bcryptjs'
+
 import './Login.css'
 
 const Login = () => {
+    const navigate = useNavigate()
 
     const [action, setAction] = useState("Login")
     const usernameInputRef = useRef()
@@ -76,7 +79,8 @@ const Login = () => {
                     console.log("oops")
                 }
                 if (result) {
-                    console.log('win')
+                    localStorage.setItem("user", username)
+                    navigate("homepage")
                 }
                 else {
                     console.log("fail")
