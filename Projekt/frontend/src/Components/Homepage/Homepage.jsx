@@ -4,24 +4,36 @@ import Navbar from "../Navigation/Navbar"
 
 const Homepage = () => {
 
-    return (
+    const user = localStorage.getItem("user")
 
-        <div className='container'>
-            <Navbar />
-            <div className='header'>
-                <div className='text'>Homepage</div>
-                <div className='underline'></div>
+    if (user === null) {
+        return (
+            <div>
+                <h1> NOT ALLOWED!!! </h1>
             </div>
-            <div className='inputs'>
-                <div className='input'>
-                    <input type="text" placeholder="Skriv ditt namn här ig" />
+        )
+    }
+    else {
+
+        return (
+
+            <div className='container'>
+                <Navbar />
+                <div className='header'>
+                    <div className='text'>{user}'s homepage</div>
+                    <div className='underline'></div>
                 </div>
-                <div className='input'>
-                    <input type="password" placeholder="lösenord här tack :))" />
+                <div className='inputs'>
+                    <div className='input'>
+                        <input type="text" placeholder="Skriv ditt namn här ig" />
+                    </div>
+                    <div className='input'>
+                        <input type="password" placeholder="lösenord här tack :))" />
+                    </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default Homepage

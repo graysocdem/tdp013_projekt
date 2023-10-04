@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, redirect } from 'react-router-dom';
 import bcrypt from 'bcryptjs'
 
 import './Login.css'
@@ -80,7 +80,7 @@ const Login = () => {
                 }
                 if (result) {
                     localStorage.setItem("user", username)
-                    navigate("homepage")
+                    navigate("/homepage")
                 }
                 else {
                     console.log("fail")

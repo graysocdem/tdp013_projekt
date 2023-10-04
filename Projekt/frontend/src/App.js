@@ -8,7 +8,7 @@ import Search from './Components/Search/Search'
 import { Route, Routes } from "react-router-dom"
 
 function App() {
-  
+
   let isLoggedIn = localStorage.getItem("user") != null
 
   //Login
@@ -16,23 +16,27 @@ function App() {
   //Friend's page
 
   // const { friendName } = useParams();
-  
+
   // TODO:
   // <Homepage>
   // <Friendpage>
 
   return (
     <div>
-      {isLoggedIn ? 
+      {isLoggedIn ?
         // <Navbar />
         <Routes>
+          <Route path="/" element={<Login />} />
           <Route path="/homepage" element={<Homepage />} />
           <Route path="/friends" element={<Friendlist />} />
           <Route path="/search" element={<Search />} />
           {/* <Friendpage /> */}
         </Routes>
-      :
-        <Login />
+        :
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/homepage" element={<Homepage />} />
+        </Routes>
       }
 
     </div>
