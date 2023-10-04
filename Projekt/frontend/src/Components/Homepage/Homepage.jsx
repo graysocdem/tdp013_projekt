@@ -20,7 +20,7 @@ const Homepage = () => {
             <div className='container'>
                 <Navbar />
                 <div className='header'>
-                    <div className='text'>{user}'s homepage</div>
+                    <div className='text'>{user}'s Homepage</div>
                     <div className='underline'></div>
                 </div>
                 <div className='inputs'>

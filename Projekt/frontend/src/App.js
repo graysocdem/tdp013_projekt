@@ -1,16 +1,29 @@
 import logo from './logo.svg'
 import './App.css'
+import { useNavigate } from 'react-router-dom';
 
 import Login from './Components/Login/Login'
-import Homepage from './Components/Homepage/Homepage'
-import Friendlist from './Components/Friendlist/Friendlist'
-import Search from './Components/Search/Search'
-import { Route, Routes } from "react-router-dom"
+// import Homepage from './Components/Homepage/Homepage'
+// import Friendlist from './Components/Friendlist/Friendlist'
+// import Search from './Components/Search/Search'
+import MyRoutes from './Components/MyRoutes/MyRoutes'
+
+import { useEffect, useState } from "react"
 
 function App() {
 
-  let isLoggedIn = localStorage.getItem("user") != null
-
+  // const [loggedIn, setLoggedIn] = useState(localStorage.getItem("user") != null)
+  const navigate = useNavigate()
+  const [comp, setComp] = useState(<Login />)
+  let user = localStorage.getItem("user")
+  
+  // if (localStorage.getItem("user") != null) {
+  //   setLoggedIn = true
+  // }
+  // else {
+  //   setLoggedIn = false
+  // }
+  
   //Login
   //Homepage
   //Friend's page
@@ -21,26 +34,19 @@ function App() {
   // <Homepage>
   // <Friendpage>
 
-  return (
-    <div>
-      {isLoggedIn ?
-        // <Navbar />
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/homepage" element={<Homepage />} />
-          <Route path="/friends" element={<Friendlist />} />
-          <Route path="/search" element={<Search />} />
-          {/* <Friendpage /> */}
-        </Routes>
-        :
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/homepage" element={<Homepage />} />
-        </Routes>
+  useEffect(() => {
+      if (user != null ) {
+        setComp(<MyRoutes />)
       }
-
-    </div>
-  );
+      else {
+        navigate("/")
+        setComp(<Login />)
+      }
+  }, [user])
+  
+  return (
+    comp
+  )
 }
 
 export default App;

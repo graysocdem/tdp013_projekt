@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { useNavigate, redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import bcrypt from 'bcryptjs'
 
 import './Login.css'
@@ -43,7 +43,11 @@ const Login = () => {
             })
                 .then(response => response.json())
                 .then(response => console.log(response))
-        }
+
+                alert("You have been signed up!")
+
+            }
+
 
         else {
             console.log("User already exists")
@@ -57,6 +61,10 @@ const Login = () => {
 
         const username = usernameInputRef.current.value
         const password = passwordInputRef.current.value
+
+        if (username === "" || password === "") {
+            alert("Please fill out both forms.")
+        }
 
         let user = []
         await fetch(`http://localhost:3000/user/${username}`, {
@@ -80,7 +88,7 @@ const Login = () => {
                 }
                 if (result) {
                     localStorage.setItem("user", username)
-                    navigate("/homepage")
+                    navigate("/")
                 }
                 else {
                     console.log("fail")
@@ -95,30 +103,28 @@ const Login = () => {
                 <div className='text'>{action}</div>
                 <div className='underline'></div>
             </div>
+            
             <div className='inputs'>
                 <div className='input'>
-                    <input type="text" placeholder="Skriv ditt namn här ig" ref={usernameInputRef} />
+                    <input type="text" placeholder="skriv ditt namn här eller nåt. upp till dig" ref={usernameInputRef} />
                 </div>
                 <div className='input'>
-                    <input type="password" placeholder="lösenord här tack :))" ref={passwordInputRef} />
+                    <input type="password" placeholder="lösenord här. om du känner för det" ref={passwordInputRef} />
                 </div>
-            </div>
 
-            {action === "Sign Up"
-                ?
-                <div className="forgot-password" onClick={() => { setAction("Login") }}> Already have an account? <span> Log in here! </span> </div>
-                :
-                <div className="forgot-password" onClick={() => { setAction("Sign Up") }}> Don't have an account? <span> Sign up here! </span> </div>
-            }
+                {action === "Sign Up"
+                    ?
+                    <div className="forgot-password"> Already have an account? <span onClick={() => { setAction("Login") }}> Log in here! </span> </div>
+                    :
+                    <div className="forgot-password"> Don't have an account? <span onClick={() => { setAction("Sign Up") }}> Sign up here! </span> </div>
+                }
 
-            <div className='submit-container'>
                 {action === "Sign Up"
                     ?
                     <div className="submit" onClick={(e) => handleSignup(e)}>{action}</div>
                     :
                     <div className="submit" onClick={(e) => handleLogin(e)}>{action}</div>
                 }
-
             </div>
         </div>
     )
