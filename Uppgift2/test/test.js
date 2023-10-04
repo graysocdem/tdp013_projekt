@@ -5,7 +5,7 @@ const expect = chai.expect;
 
 describe('Messages API', () => {
 
-  //Testing GET all messages
+  // Testing GET all messages
   it('should fetch all messages', function(done)  {
     request(app)
     
@@ -20,7 +20,6 @@ describe('Messages API', () => {
 
 
   // Testing POST a message
-
   it('should save a message', function(done)  {
     
     const post = {
@@ -39,9 +38,10 @@ describe('Messages API', () => {
       })
   })
 
-  
+//--------------------------------------------------------------------------------------------------------------------------
+  // Updating Message Read Status
   it('should update the read status of a message', function(done) {
-  const MessageId = '651aee15034ccd5c69343139';
+  const MessageId = '651a8ae4e0ec1c07b854ed61';
   request(app)
       .patch(`/messages/${MessageId}`)
       .end((err, res) => {
@@ -51,10 +51,25 @@ describe('Messages API', () => {
           done();
       });
   });
+  
+  // Updating Message Read Status
+  it('should update the read status of a message', function(done) {
+    const MessageId = '651a8ae4e0ec1c07b854ed61';
+    request(app)
+        .patch(`/messages/${MessageId}`)
+        .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(["\"post marked as unread\"", "\"post marked as read\""]).to.include(res.text);
+  
+            done();
+        });
+    });
 
+//--------------------------------------------------------------------------------------------------------------------------
  
+  // Fetching Specific Message
   it('should fetch a specific message with its ID', function(done) {
-  const MessageId = '651aee15034ccd5c69343139';
+  const MessageId = '651a8ae4e0ec1c07b854ed61';
 
   request(app)
       .get(`/messages/${MessageId}`)
@@ -66,7 +81,7 @@ describe('Messages API', () => {
       });
   });
 
-
+  // Handling Invalid Parameters on POST:
   it('should not save a message with invalid parameters', function(done) {
     const invalidPost = {
        author: "",
@@ -84,7 +99,7 @@ describe('Messages API', () => {
   });
 
 
-  
+  // Updating with Invalid ID
   it('should not update a post with an invalid ID', function(done) {
     const invalidId = 'weewoo';
     request(app)
@@ -95,7 +110,7 @@ describe('Messages API', () => {
        });
   });
 
-
+  // Handling DELETE Request
   it('should return 405 Method Not Allowed for weird requests', function(done) {
     request(app)
        .delete('/messages')
@@ -105,7 +120,32 @@ describe('Messages API', () => {
        });
   });
 
+  // Handling Unsupported Method (PUT)
+  it('should return 405 Method Not Allowed when using an unsupported method', function(done) {
+    const nonExistentId = 'noway';
+    request(app)
+       .put(`/messages/${nonExistentId}`)
+       .end((err, res) => {
+          expect(res.status).to.equal(405);
+          expect(res.text).to.equal("Method Not Allowed");
+          done();
+       });
+  });
+});
 
+// GET Request with Invalid ID
+describe('GET /messages/:id', () => {
 
+  it('should return 400 for an invalid post ID', function(done) {
+    
+    const invalidId = 'invalid123';
+
+    request(app)
+      .get(`/messages/${invalidId}`)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      });
+  });
 });
 

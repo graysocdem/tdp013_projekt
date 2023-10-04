@@ -99,11 +99,15 @@ async function idPatch(req, res) {
 async function idGet(req, res) {
     try {
         const post = await Post.findById(req.params.id)
+        if (!post) {
+            res.status(400).send("Invalid ID");
+            return;
+        }
         res.status(200)
         res.json(post)
         
     } catch (err) {
-        res.status(400)
+        res.status(400).send("Error occurred");
     }
 }
 

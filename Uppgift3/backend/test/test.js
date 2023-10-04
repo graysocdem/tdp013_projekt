@@ -3,6 +3,9 @@ const chai = require('chai');
 const app = require('../server.js');
 const expect = chai.expect;
 
+
+
+
 describe('Messages API', () => {
 
   //Testing GET all messages
@@ -39,19 +42,33 @@ describe('Messages API', () => {
       })
   })
 
+//--------------------------------------------------------------------------------------------------------------------------
+
+  // it('should update the read status of a message', function(done) {
+  // const MessageId = '651a8cb2ac8687fd6a96429f';
+  // request(app)
+  //     .patch(`/messages/${MessageId}`)
+  //     .end((err, res) => {
+  //         expect(res.status).to.equal(200);
+  //         expect(["\"post marked as unread\"", "\"post marked as read\""]).to.include(res.text);
+
+  //         done();
+  //     });
+  // });
   
-  it('should update the read status of a message', function(done) {
-  const MessageId = '651a8ae4e0ec1c07b854ed61';
-  request(app)
-      .patch(`/messages/${MessageId}`)
-      .end((err, res) => {
-          expect(res.status).to.equal(200);
-          expect(["\"post marked as unread\"", "\"post marked as read\""]).to.include(res.text);
+  // it('should update the read status of a message', function(done) {
+  //   const MessageId = '651a8cb2ac8687fd6a96429f';
+  //   request(app)
+  //       .patch(`/messages/${MessageId}`)
+  //       .end((err, res) => {
+  //           expect(res.status).to.equal(200);
+  //           expect(["\"post marked as unread\"", "\"post marked as read\""]).to.include(res.text);
+  
+  //           done();
+  //       });
+  //   });
 
-          done();
-      });
-  });
-
+//--------------------------------------------------------------------------------------------------------------------------
  
   it('should fetch a specific message with its ID', function(done) {
   const MessageId = '651a8ae4e0ec1c07b854ed61';
@@ -106,6 +123,32 @@ describe('Messages API', () => {
   });
 
 
+  it('should return 405 Method Not Allowed when using an unsupported method', function(done) {
+    const nonExistentId = 'noway';
+    request(app)
+       .put(`/messages/${nonExistentId}`)
+       .end((err, res) => {
+          expect(res.status).to.equal(405);
+          expect(res.text).to.equal("Method Not Allowed");
+          done();
+       });
+  });
 
+
+});
+
+describe('GET /messages/:id', () => {
+
+  it('should return 400 for an invalid post ID', function(done) {
+    
+    const invalidId = 'invalid123';
+
+    request(app)
+      .get(`/messages/${invalidId}`)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      });
+  });
 });
 

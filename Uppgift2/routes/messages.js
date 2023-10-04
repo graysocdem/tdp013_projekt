@@ -34,14 +34,14 @@ router.all('/:id', async (req, res) => {
     }
 })
 
-router.all('*', (req, res) => {
-    if (err instanceof NotFound) {
-        res.status(404).send("Not Found")
-    }
-    else {
-        res.status(500).send("Unknown Error")
-    }
-})
+// router.all('*', (req, res) => {
+//     if (err instanceof NotFound) {
+//         res.status(404).send("Not Found")
+//     }
+//     else {
+//         res.status(500).send("Unknown Error")
+//     }
+// })
 
 async function messagesPost(req, res) {
     const post = new Post({
@@ -99,11 +99,15 @@ async function idPatch(req, res) {
 async function idGet(req, res) {
     try {
         const post = await Post.findById(req.params.id)
+        if (!post) {
+            res.status(400).send("Invalid ID");
+            return;
+        }
         res.status(200)
         res.json(post)
         
     } catch (err) {
-        res.status(400)
+        res.status(400).send("Error occurred");
     }
 }
 
