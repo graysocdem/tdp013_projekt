@@ -8,3 +8,25 @@
     background: #fff;
     padding-bottom: 30px;
 }
+
+.inputs {
+    min-height: 200px;
+}
+
+.input {
+    word-break: break-word;
+    height: 100%;
+    width: 50%;
+}
+
+.input input{
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #797979;
+    margin-left: 10px;
+    font-size: 20px;
+    
+}

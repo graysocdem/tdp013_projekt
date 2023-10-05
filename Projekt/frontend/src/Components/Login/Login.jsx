@@ -50,7 +50,7 @@ const Login = () => {
 
 
         else {
-            console.log("User already exists")
+            alert("User already exists!")
             //TODO visa användaren user already exists 
         }
 
@@ -64,6 +64,7 @@ const Login = () => {
 
         if (username === "" || password === "") {
             alert("Please fill out both forms.")
+            return
         }
 
         let user = []
@@ -77,10 +78,10 @@ const Login = () => {
             .then(response => { user = response })
 
         if (user.length === 0) {
-            //TODO visa user does not exist
+            alert("User does not exist")
         }
         else {
-            console.log("user:", password, user[0].password)
+
             bcrypt.compare(password, user[0].password, (err, result) => {
                 console.log("result of comparison:", err, result)
                 if (err) {
@@ -91,7 +92,7 @@ const Login = () => {
                     navigate("/")
                 }
                 else {
-                    console.log("fail")
+                    alert("Wrong username and/or password")
                 }
             })
         }
