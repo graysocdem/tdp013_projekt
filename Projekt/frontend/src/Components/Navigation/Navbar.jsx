@@ -7,7 +7,6 @@ import { Link } from "react-router-dom"
 function Navbar() {
 
     function handleLogout(e) {
-        e.preventReload()
         localStorage.clear()
     }
 

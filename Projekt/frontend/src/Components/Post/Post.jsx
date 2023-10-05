@@ -1,6 +1,6 @@
 import "./Post.css"
 
-const Post = () => {
+const Post = (props) => {
 
     const name = "namePlaceholder"
     const message = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et ma"
@@ -9,13 +9,13 @@ const Post = () => {
     return (
         <div className="post-container">
             <div className="name">
-                Name: {name}
+                Name: { props.name }
             </div>
             <div className="message">
-                {message}
+                { props.message }
             </div>
             <div className="time">
-                {time}
+                { props.timestamp }
             </div>
         </div>
     )

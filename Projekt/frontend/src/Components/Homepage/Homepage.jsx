@@ -1,17 +1,16 @@
-import { React, useRef} from 'react'
+import { React, useRef, useState, useEffect } from 'react'
 import "./Homepage.css"
 import Navbar from "../Navigation/Navbar"
 import Post from "../Post/Post"
 
 const Homepage = () => {
 
-    
+    const [posts, setPosts] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     const messageInputRef = useRef()
-
     const publishPost = async (e) => {
         e.preventDefault()
-
         
         const user = localStorage.getItem("user")
         const owner = user
@@ -33,32 +32,37 @@ const Homepage = () => {
 
     }
 
-    const getPosts = async () => {
+    const fetchPosts = () => {
+        console.log("varför är posts ett promise", posts)
+        const owner = localStorage.getItem("user")
         
-        const owner = localStorage.getItem(user)
-
-        const page = fetch(`http://localhost:3000/page/${owner}`, {
+        fetch(`http://localhost:3000/page/${owner}`, {
             headers: {
                 "content-type": "application/json"
             },
-            method: "GET"
-        })
-        
-        console.log(page)
-
-        return await fetch(`http://localhost:3000/page/${owner}`, {
-            headers: {
-                "content-type": "application/json"
-            },
-            method: "GET"
-        })
+            method: "GET"})
+            .then(response => response.json())
+            .then(response => {setPosts(response[0].posts)})
     }
+
+    useEffect(() => {
+        setPosts(fetchPosts())
+    }, []);
+
+    useEffect(() => {
+        if (posts != null) {setLoading(false)}
+    }, [posts])
+
+    useEffect(() => {
+        const interval = setInterval(() => fetchPosts(), 7000);
+        return () => {clearInterval(interval)} 
+    }, []);
 
     const user = localStorage.getItem("user")
 
-    return (
-
-        <div className='container'>
+    if (loading) {
+        return (
+            <div className='container'>
             <Navbar />
             <div className='header'>
                 <div className='text'>{user}'s Homepage</div>
@@ -69,17 +73,41 @@ const Homepage = () => {
                 <textarea placeholder="här skriver du ditt meddelande. om du vill asså. jag tänker inte tvinga dig till nåt. faktum är, hela den här appen är frivillig att använda." ref={messageInputRef}/>
                 <input className="button" type="button" onClick={(e) => {publishPost(e)}} value="Post" />
 
-                <hr />
-
-                {getPosts()}
+                <hr />                
+                
+                <h1>Loading...</h1>
 
             </div>
 
-        {/* script */}
-
-
         </div>
-    )
+        )
+    }
+    else {
+        return (
+
+            <div className='container'>
+                <Navbar />
+                <div className='header'>
+                    <div className='text'>{user}'s Homepage</div>
+                    <div className='underline'></div>
+                </div>
+    
+                <div className='wrapper'>
+                    <textarea placeholder="här skriver du ditt meddelande. om du vill asså. jag tänker inte tvinga dig till nåt. faktum är, hela den här appen är frivillig att använda." ref={messageInputRef}/>
+                    <input className="button" type="button" onClick={(e) => {publishPost(e)}} value="Post" />
+    
+                    <hr />
+    
+                    { posts.map((post) => (
+                     <Post key={post.timestamp} name={post.name} message={post.message} timestamp={post.timestamp} />
+                    ))} 
+                    
+                </div>
+
+            </div>
+        )
+    }
+
 
 }
 

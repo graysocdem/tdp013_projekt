@@ -18,6 +18,8 @@
     align-items: center;
     gap: 15px;
     overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 textarea {

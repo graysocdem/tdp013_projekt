@@ -66,21 +66,21 @@ app.post('/post', async (req, res) => {
   const query = Page.find({ owner: owner })
   const result = await query
   
-  console.log(result)
-
   post.save()
-  // console.log(post)
+  console.log("Post saved")
 })
 
 //Get page
 app.get('/page/:owner', async (req, res) => {
+  console.log("received request")
   const { owner } = req.params
   
+  console.log("owner:", owner)
   const query = Page.find({ owner: owner})
   const result = await query
-
-  console.log(result.posts)
+  console.log("result:", result)
+  console.log("sent response")
+  res.status(200).send(JSON.stringify(result))
 })
 
-// This displays message that the server running and listening to specified port
 app.listen(port, () => console.log(`Listening on port ${port}`)); 
