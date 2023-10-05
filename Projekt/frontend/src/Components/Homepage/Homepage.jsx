@@ -1,6 +1,7 @@
 import React from 'react'
 import "./Homepage.css"
 import Navbar from "../Navigation/Navbar"
+import Post from "../Post/Post"
 
 const Homepage = () => {
 
@@ -14,11 +15,20 @@ const Homepage = () => {
                 <div className='text'>{user}'s Homepage</div>
                 <div className='underline'></div>
             </div>
-            <div className='inputs'>
-                <div className='input'>
-                    <input type="input" placeholder="Skriv ditt namn här ig" />
-                </div>
+
+            <div className='wrapper'>
+                <textarea />
+                <input className="button" type="button" value="Post" />
+
+                <hr />
+
+                <Post />
+
             </div>
+
+        {/* script */}
+
+
         </div>
     )
 

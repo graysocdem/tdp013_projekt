@@ -9,24 +9,40 @@
     padding-bottom: 30px;
 }
 
-.inputs {
-    min-height: 200px;
-}
-
-.input {
-    word-break: break-word;
-    height: 100%;
-    width: 50%;
-}
-
-.input input{
-    height: 100%;
+.wrapper {
+    display: flex;
+    min-height: 250px;
     width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
+    margin-top: 55px;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+textarea {
+    resize: none;
     color: #797979;
-    margin-left: 10px;
+    background: #eaeaea;
+    border-radius: 6px;
     font-size: 20px;
-    
+    border: none;
+    width: 550px;
+    height: 150px;
+}
+
+.button {
+    width: 550px;
+    height: 55px;
+    background-color: #4c00b4;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 14px;
+    border: none;
+}
+
+hr {
+    color: black;
+    size: 5px;
+    width: 525px;
 }

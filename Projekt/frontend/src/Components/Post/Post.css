@@ -1,0 +1,24 @@
+.post-container {
+    width: 550px;
+    height: 150px;
+    border: 5px;
+    background-color: ;
+    border-radius: 6px;
+
+}
+
+.name {
+    height: 15%;
+    border: 5px;
+}
+
+.message {
+    height: 70%;
+    border: 5px;
+
+}
+
+.time {
+    height: 15%;
+    border: 5px;
+}
