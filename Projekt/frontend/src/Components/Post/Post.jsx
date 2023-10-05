@@ -2,16 +2,20 @@ import "./Post.css"
 
 const Post = () => {
 
+    const name = "namePlaceholder"
+    const message = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et ma"
+    const time = "timePlaceholder"
+
     return (
         <div className="post-container">
             <div className="name">
-                hej
+                Name: {name}
             </div>
             <div className="message">
-                san
+                {message}
             </div>
             <div className="time">
-                svej
+                {time}
             </div>
         </div>
     )

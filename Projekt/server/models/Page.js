@@ -1,21 +1,16 @@
+const Post = require('./Post')
+
 const mongoose = require('mongoose')
 
 const pageSchema = new mongoose.Schema({
-    username: {
+    owner: {
         type: String,
         required: true,
     },
-    posts: [{
-        user: String,
-        required: true,
-
-        text: String,
-        required: true,
-
-        timestamp: String,
+    posts: {
+        type: Array,
         required: true
-
-    }]
+    }
 })
 
 module.exports = mongoose.model('Page', pageSchema)

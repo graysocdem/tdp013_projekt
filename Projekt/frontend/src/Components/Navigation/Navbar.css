@@ -4,6 +4,7 @@
     justify-content: center;
     flex-direction: row;
     overflow: hidden;
+    min-height: 50px;
 }
 
 .navbar ul {
