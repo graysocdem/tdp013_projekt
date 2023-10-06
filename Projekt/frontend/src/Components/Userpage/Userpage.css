@@ -8,6 +8,16 @@
     font-weight: 700;
 }
 
+.friend-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 200px;
+    min-height: 30px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
 .friend-button:active{
     background-color: green;
 }

@@ -1,5 +1,5 @@
 import { React, useRef, useState, useEffect } from 'react'
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useResolvedPath } from "react-router-dom";
 import "./Userpage.css"
 import Navbar from "../Navigation/Navbar"
 import Post from "../Post/Post"
@@ -120,14 +120,34 @@ const Userpage = () => {
         )
     }
     else {
-        return (
 
+        if (ownerObject.friends.includes(visitorName)) {
+            
+        }
+
+        return (
             <div className='container'>
                 <Navbar />
                 <div className='header'>
                     <div className='text'>{ownerName}'s Page</div>
                     <div className='underline'></div>
-                    <input className="friend-button" type="button" value="Friend? :)" onClick={() => handleFriends()} />
+
+                    {
+                        (() => {
+                            console.log("hdjhfgalksödghklasjdghklasdjg")
+                            console.log(ownerObject.friends.includes(visitorName), ownerObject.requests.includes(visitorName))
+                            if (ownerObject.friends.includes(visitorName)) {
+                                return (<input className="unfriend-button" type="button" value="Defriend? :(" onClick={() => handleFriends()} />)
+                            }
+                            else if (ownerObject.requests.includes(visitorName)) {
+                                return (<input className="unfriend-button" type="button" value="Waiting for friend :| 🙃" onClick={() => handleFriends()} />)
+                            }
+                            else {
+                                return (<input className="friend-button" type="button" value="Befriend? :)" onClick={() => handleFriends()} />)
+                            }
+                        })()
+                    }
+                    
                 </div>
 
                 <div className='wrapper'>
