@@ -16,10 +16,12 @@ const Homepage = () => {
         const owner = user
         const message = messageInputRef.current.value
         const timestamp = new Date().toLocaleString('en-US', { timeZone: 'GMT'})
-        
+
+        messageInputRef.current.value = ""
+
         if (message.length === 0 || message.length > 140) {
             alert("Invalid message length")
-            messageInputRef.current.value = ""
+            return
         }
         
         await fetch(`http://localhost:3000/post`, {
@@ -29,11 +31,9 @@ const Homepage = () => {
             body: JSON.stringify({owner: owner, user: user, message: message, timestamp: timestamp}),
             method: "POST"
         })
-
     }
 
     const fetchPosts = () => {
-        console.log("varför är posts ett promise", posts)
         const owner = localStorage.getItem("user")
         
         fetch(`http://localhost:3000/page/${owner}`, {
@@ -42,7 +42,8 @@ const Homepage = () => {
             },
             method: "GET"})
             .then(response => response.json())
-            .then(response => {setPosts(response[0].posts)})
+            .then(response => {setPosts(response[0].posts.reverse())})
+            .finally(console.log("sent the request :))"))
     }
 
     useEffect(() => {
@@ -54,7 +55,7 @@ const Homepage = () => {
     }, [posts])
 
     useEffect(() => {
-        const interval = setInterval(() => fetchPosts(), 7000);
+        const interval = setInterval(() => fetchPosts(), 1000);
         return () => {clearInterval(interval)} 
     }, []);
 
@@ -99,7 +100,7 @@ const Homepage = () => {
                     <hr />
     
                     { posts.map((post) => (
-                     <Post key={post.timestamp} name={post.name} message={post.message} timestamp={post.timestamp} />
+                     <Post name={post.user} message={post.message} timestamp={post.timestamp} />
                     ))} 
                     
                 </div>

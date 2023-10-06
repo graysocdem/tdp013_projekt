@@ -44,6 +44,11 @@ textarea {
     border: none;
 }
 
+.button:active {
+    background-color:#7b52b4;
+    color: #33a3bc;
+}
+
 hr {
     color: black;
     size: 5px;

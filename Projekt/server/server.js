@@ -21,6 +21,15 @@ app.get('/user/:username', async (req, res) => {
   const query = User.find({ username: username})
   const result = await query
   //DEBUG
+  console.log("Got user")
+  res.status(200).send(JSON.stringify(result))
+})
+
+app.get('/users', async (req, res) => {
+  const query = User.find()
+  const result = await query
+
+  console.log(result)
   res.status(200).send(JSON.stringify(result))
 })
 
@@ -41,6 +50,7 @@ app.post('/user', async (req, res) => {
   try {
       await page.save()
       await user.save()
+      console.log("Created user")
       res.status(200).send( {response: "User created"} );
   }   catch (err) {
       res.status(400).send( {response: err} )
@@ -67,19 +77,16 @@ app.post('/post', async (req, res) => {
   const result = await query
   
   post.save()
-  console.log("Post saved")
+  console.log("Saved post")
 })
 
 //Get page
 app.get('/page/:owner', async (req, res) => {
-  console.log("received request")
   const { owner } = req.params
   
-  console.log("owner:", owner)
   const query = Page.find({ owner: owner})
   const result = await query
-  console.log("result:", result)
-  console.log("sent response")
+  console.log("Sent page")
   res.status(200).send(JSON.stringify(result))
 })
 

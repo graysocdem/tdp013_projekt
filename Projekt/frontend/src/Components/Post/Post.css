@@ -10,19 +10,18 @@
 
 .name {
     font-weight: 700;
-    height: 15%;
+    min-height: 22.5px;
     border: 5px;
 }
 
 .message {
     font-size: 22px;
-    height: 70%;
+    min-height: 105px;
     border: 5px;
 }
 
 .time {
     font-weight: 700;
-
-    height: 15%;
+    min-height: 22.5px;
     border: 5px;
 }
