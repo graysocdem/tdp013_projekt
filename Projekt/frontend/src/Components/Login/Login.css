@@ -34,12 +34,15 @@
     margin-top: 55px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 25px;
 }
 
 .input{
     display: flex;
     align-items: center;
+    
     margin: auto;
     width: 480px;
     height: 80px;

@@ -70,11 +70,11 @@ const Search = () => {
                     <div className='text'>Search</div>
                     <div className='underline'></div>
                 </div>
-                <div className='inputs'>
+                <div className='search-container'>
                     <div className='input'>
                         <input type="text" placeholder="vem letar du efter? vi är ingen jävla upplysningstjänst 118800 my ass" ref={queryInputRef}/>
                     </div>
-                    <div className='button' onClick={() => handleSearch()}>Sök</div>
+                    <div className='search-button' onClick={() => handleSearch()}>Sök</div>
                 </div>
 
                 <hr />

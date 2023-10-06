@@ -39,7 +39,8 @@ app.post('/user', async (req, res) => {
   const user = new User({
     username: username,
     password: password,
-    friends: []
+    friends: [],
+    requests: []
   })
 
   const page = new Page({
@@ -72,12 +73,11 @@ app.post('/post', async (req, res) => {
     { owner: owner },
     { $push: { posts: post } }
   )
-
-  const query = Page.find({ owner: owner })
-  const result = await query
   
   post.save()
+
   console.log("Saved post")
+  res.status(200).send()
 })
 
 //Get page
@@ -88,6 +88,21 @@ app.get('/page/:owner', async (req, res) => {
   const result = await query
   console.log("Sent page")
   res.status(200).send(JSON.stringify(result))
+})
+
+app.post("/:username/request", async (req, res) => {
+
+  const { owner, suitor  } = req.body
+
+  console.log(owner, suitor)
+  await User.findOneAndUpdate(
+    { username: owner },
+    { $push: { requests: suitor } }
+  )
+
+  console.log("Saved request")
+  res.status(200).send()
+
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}`)); 

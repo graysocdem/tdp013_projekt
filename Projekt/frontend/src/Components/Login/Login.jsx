@@ -16,6 +16,19 @@ const Login = () => {
         const username = usernameInputRef.current.value
         const password = passwordInputRef.current.value
 
+        if (username.length === 0 || password.length === 0) {
+            alert("Please fill out both forms.")
+            usernameInputRef.current.value = ""
+            passwordInputRef.current.value = ""
+
+            return
+        }
+        if (username.indexOf(' ') >= 0) {
+            alert("Invalid character in username. or something, prolly a blankspace #tswift")
+            usernameInputRef.current.value = ""
+            return
+        }
+
         // const salt = "DaveIsTheGOAT"
         const hashedPassword = bcrypt.hashSync(password, 10)
 
@@ -38,15 +51,15 @@ const Login = () => {
                 headers: {
                     "content-type": "application/json"
                 },
-                body: JSON.stringify({username: username, password: hashedPassword}),
+                body: JSON.stringify({ username: username, password: hashedPassword }),
                 method: "POST"
             })
                 .then(response => response.json())
                 .then(response => console.log(response))
 
-                alert("You have been signed up!")
+            alert("You have been signed up!")
 
-            }
+        }
 
 
         else {
@@ -104,7 +117,7 @@ const Login = () => {
                 <div className='text'>{action}</div>
                 <div className='underline'></div>
             </div>
-            
+
             <div className='inputs'>
                 <div className='input'>
                     <input type="text" placeholder="skriv ditt namn här eller nåt. upp till dig" ref={usernameInputRef} />
