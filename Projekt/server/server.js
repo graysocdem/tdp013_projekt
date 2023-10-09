@@ -5,7 +5,6 @@ const cors = require('cors')
 const User = require('./models/User')
 const Page = require('./models/Page')
 const Post = require('./models/Post')
-// const { default: Post } = require('../frontend/src/Components/Post/Post')
 
 const app = express(); 
 const port = 3000;
@@ -90,6 +89,7 @@ app.get('/page/:owner', async (req, res) => {
   res.status(200).send(JSON.stringify(result))
 })
 
+//send request
 app.post("/:username/request", async (req, res) => {
 
   const { owner, suitor  } = req.body
@@ -102,7 +102,34 @@ app.post("/:username/request", async (req, res) => {
 
   console.log("Saved request")
   res.status(200).send()
-
 })
 
+//accept request
+app.patch("/accept", async (req, res) => {
+  console.log("JAG KOMMER IN HÄR ÖVER HUVUD TAGET")
+  const { owner, suitor } = req.body
+
+  console.log("HÄR KOMMER CALLE", owner, suitor)
+
+  await User.findOneAndUpdate(
+    { username: owner },
+    { $push: { friends: suitor}}
+  )
+
+  await User.findOneAndUpdate(
+    { username: owner },
+    { $pull: { requests: suitor}}
+  )
+
+  await User.findOneAndUpdate(
+    { username: suitor },
+    { $push: { friends: owner} }
+  )
+
+
+
+  console.log("Updated")
+  res.status(200).send()
+
+})
 app.listen(port, () => console.log(`Listening on port ${port}`)); 

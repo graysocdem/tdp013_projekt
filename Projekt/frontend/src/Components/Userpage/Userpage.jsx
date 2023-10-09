@@ -3,6 +3,7 @@ import { useParams, useNavigate, useResolvedPath } from "react-router-dom";
 import "./Userpage.css"
 import Navbar from "../Navigation/Navbar"
 import Post from "../Post/Post"
+// import Friendbutton from "../Friendbutton/Friendbutton"
 
 const Userpage = () => {
     const navigate = useNavigate()
@@ -24,6 +25,11 @@ const Userpage = () => {
     const publishPost = async (e) => {
         e.preventDefault()
 
+        if (!ownerObject.friends.includes(visitorName)) {
+            alert("only friends can post !!!!!!!")
+            return
+        }
+
         const message = messageInputRef.current.value
         const timestamp = new Date().toLocaleString('en-US', { timeZone: 'GMT' })
 
@@ -43,9 +49,9 @@ const Userpage = () => {
         })
     }
 
-    const fetchPosts = () => {
+    const fetchPosts = async () => {
 
-        fetch(`http://localhost:3000/page/${ownerName}`, {
+        await fetch(`http://localhost:3000/page/${ownerName}`, {
             headers: {
                 "content-type": "application/json"
             },
@@ -56,9 +62,9 @@ const Userpage = () => {
             .finally(console.log("fetched posts"))
     }
 
-    const fetchOwner = () => {
+    const fetchOwner = async () => {
 
-        fetch(`http://localhost:3000/user/${ownerName}`, {
+        await fetch(`http://localhost:3000/user/${ownerName}`, {
             headers: {
                 "content-type": "application/json"
             },
@@ -69,24 +75,42 @@ const Userpage = () => {
             .finally(console.log("fetched owner"))
     }
 
-    const handleFriends = async () => {
+    const fetchFriendStatus = () => {
         
-        const response = await fetch(`http://localhost:3000/${ownerName}/request`, {
-            headers: {
-                "content-type": "application/json"
-            },
-            body: JSON.stringify({owner: ownerName, suitor: visitorName}),
-            method: "POST"
-        })
+        if (ownerObject.requests.includes(visitorName)) {
+            return "pending"
+        }
+        else if (ownerObject.friends.includes(visitorName)) {
+            {
+                return "accepted"
+            }
+        }
+        else {
+            return "unsent"
+        }
+    }
 
-        console.log(response)
+    const handleRequest = () => {
 
+        if (friendStatus === "unsent") {
+            fetch(`http://localhost:3000/${ownerName}/request`, {
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({owner: ownerName, suitor: visitorName}),
+                method: "POST"
+            })
+        }
     }
 
     useEffect(() => {
-        setOwner(fetchOwner())
-        setPosts(fetchPosts())
+        fetchOwner()
+        fetchPosts()
     }, []);
+
+    useEffect(() => {
+        if (ownerObject !== null) {setFriendStatus(fetchFriendStatus())}
+    }, [ownerObject])
 
     useEffect(() => {
         if (posts != null && ownerObject != null) { setLoading(false) }
@@ -134,17 +158,10 @@ const Userpage = () => {
 
                     {
                         (() => {
-                            console.log("hdjhfgalksödghklasjdghklasdjg")
-                            console.log(ownerObject.friends.includes(visitorName), ownerObject.requests.includes(visitorName))
-                            if (ownerObject.friends.includes(visitorName)) {
-                                return (<input className="unfriend-button" type="button" value="Defriend? :(" onClick={() => handleFriends()} />)
-                            }
-                            else if (ownerObject.requests.includes(visitorName)) {
-                                return (<input className="unfriend-button" type="button" value="Waiting for friend :| 🙃" onClick={() => handleFriends()} />)
-                            }
-                            else {
-                                return (<input className="friend-button" type="button" value="Befriend? :)" onClick={() => handleFriends()} />)
-                            }
+                            // return (<Friendbutton state={friendStatus}/>)
+                            return (
+                            <input className="friend-button" type="button" onClick={() => handleRequest()} value={`Friend status: ${friendStatus}`}></input>
+                            )
                         })()
                     }
                     

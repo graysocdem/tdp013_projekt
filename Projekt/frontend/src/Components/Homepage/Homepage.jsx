@@ -2,9 +2,9 @@ import { React, useRef, useState, useEffect } from 'react'
 import "./Homepage.css"
 import Navbar from "../Navigation/Navbar"
 import Post from "../Post/Post"
+import { Navigate } from 'react-router-dom'
 
 const Homepage = () => {
-
     const [posts, setPosts] = useState(null)
     const [loading, setLoading] = useState(true)
 

@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs'
 import './Login.css'
 
 const Login = () => {
+    
     const navigate = useNavigate()
 
     const [action, setAction] = useState("Login")
@@ -102,7 +103,7 @@ const Login = () => {
                 }
                 if (result) {
                     localStorage.setItem("user", username)
-                    navigate("/")
+                    navigate("/homepage")
                 }
                 else {
                     alert("Wrong username and/or password")

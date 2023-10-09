@@ -10,7 +10,7 @@ const MyRoutes = () => {
 
     return (
     <Routes>
-        <Route path="/" element={<Homepage />} />
+        <Route path="/homepage" element={<Homepage />} />
         <Route path="/friends" element={<Friendlist />} />
         <Route path="/search" element={<Search />} />
         <Route path="/:username" element={<Userpage />} />
