@@ -176,3 +176,16 @@ describe('PATCH /messages/:id', () => {
       });
   });
 });
+
+describe('CORS headers', () => {
+  it('should be set correctly', (done) => {
+    request(app)
+      .get('/messages') // Ersätt med din faktiska endpoint
+      .end((err, res) => {
+        expect(res.headers['access-control-allow-origin']).to.equal('http://localhost:5500');
+        // expect(res.headers['access-control-allow-methods']).to.equal('GET,POST,PATCH');
+        // expect(res.headers['access-control-allow-headers']).to.exist;
+        done(err);
+      });
+  });
+});
