@@ -41,7 +41,7 @@ describe('Messages API', () => {
 //--------------------------------------------------------------------------------------------------------------------------
   // Updating Message Read Status
   it('should update the read status of a message', function(done) {
-  const MessageId = '651a8ae4e0ec1c07b854ed61';
+  const MessageId = '651aed1ea3295378a20cd8a0';
   request(app)
       .patch(`/messages/${MessageId}`)
       .end((err, res) => {
@@ -54,7 +54,7 @@ describe('Messages API', () => {
   
   // Updating Message Read Status
   it('should update the read status of a message', function(done) {
-    const MessageId = '651a8ae4e0ec1c07b854ed61';
+    const MessageId = '651aed1ea3295378a20cd8a0';
     request(app)
         .patch(`/messages/${MessageId}`)
         .end((err, res) => {
@@ -69,7 +69,7 @@ describe('Messages API', () => {
  
   // Fetching Specific Message
   it('should fetch a specific message with its ID', function(done) {
-  const MessageId = '651a8ae4e0ec1c07b854ed61';
+  const MessageId = '651aed1ea3295378a20cd8a0';
 
   request(app)
       .get(`/messages/${MessageId}`)
@@ -133,7 +133,7 @@ describe('Messages API', () => {
   });
 });
 
-// GET Request with Invalid ID
+// GET Request with Non-existent ID
 describe('GET /messages/:id', () => {
 
   it('should return 400 for an invalid post ID', function(done) {
@@ -149,3 +149,18 @@ describe('GET /messages/:id', () => {
   });
 });
 
+// GET Request with Invalid ID
+describe('GET /messages/:id', () => {
+
+  it('should return 400 for an invalid post ID', function(done) {
+    
+    const invalidId = '¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥';
+
+    request(app)
+      .get(`/messages/${invalidId}`)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      });
+  });
+});

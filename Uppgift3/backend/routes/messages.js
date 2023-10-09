@@ -34,14 +34,15 @@ router.all('/:id', async (req, res) => {
     }
 })
 
-router.all('*', (req, res) => {
-    if (err instanceof NotFound) {
-        res.status(404).send("Not Found")
-    }
-    else {
-        res.status(500).send("Unknown Error")
-    }
-})
+// router.all('*', (req, res) => {
+//     console.log("hejhej jag finns")
+//     if (err instanceof NotFound) {
+//         res.status(404).send("Not Found")
+//     }
+//     else {
+//         res.status(500).send("Unknown Error")
+//     }
+// })
 
 async function messagesPost(req, res) {
     const post = new Post({
@@ -63,10 +64,7 @@ async function messagesGet(req, res) {
         const posts = await Post.find()
         res.json(posts)
     } catch (err) {
-
         res.status(500).send("Method Not Allowed")
-
-        res.json({ message: err.message })
     }
 }
 
@@ -99,10 +97,6 @@ async function idPatch(req, res) {
 async function idGet(req, res) {
     try {
         const post = await Post.findById(req.params.id)
-        if (!post) {
-            res.status(400).send("Invalid ID");
-            return;
-        }
         res.status(200)
         res.json(post)
         
@@ -121,7 +115,7 @@ function invalidId(str) {
 }
 
 function invalidChar(c) {
-    if (48 <= c && c <= 57 || 97 <= c && c <= 122) { return false }
+    if ((48 <= c && c <= 57) || (97 <= c && c <= 122)) { return false }
     return true
 }
 

@@ -3,9 +3,6 @@ const chai = require('chai');
 const app = require('../server.js');
 const expect = chai.expect;
 
-
-
-
 describe('Messages API', () => {
 
   //Testing GET all messages
@@ -42,36 +39,48 @@ describe('Messages API', () => {
       })
   })
 
+  // Testing bogus URL
+
+  it('access a bogus URL', function(done)  {
+
+    request(app)
+      .get('/ankeborg')
+      .end((err, res) => {
+        expect(res.status).to.equal(404)
+        done()
+      })
+  })
+
 //--------------------------------------------------------------------------------------------------------------------------
 
-  // it('should update the read status of a message', function(done) {
-  // const MessageId = '651a8cb2ac8687fd6a96429f';
-  // request(app)
-  //     .patch(`/messages/${MessageId}`)
-  //     .end((err, res) => {
-  //         expect(res.status).to.equal(200);
-  //         expect(["\"post marked as unread\"", "\"post marked as read\""]).to.include(res.text);
+  it('should update the read status of a message', function(done) {
+  const MessageId = '651aed1ea3295378a20cd8a0';
+  request(app)
+      .patch(`/messages/${MessageId}`)
+      .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(["\"Post marked as unread.\"", "\"Post marked as read.\""]).to.include(res.text);
 
-  //         done();
-  //     });
-  // });
+          done();
+      });
+  });
   
-  // it('should update the read status of a message', function(done) {
-  //   const MessageId = '651a8cb2ac8687fd6a96429f';
-  //   request(app)
-  //       .patch(`/messages/${MessageId}`)
-  //       .end((err, res) => {
-  //           expect(res.status).to.equal(200);
-  //           expect(["\"post marked as unread\"", "\"post marked as read\""]).to.include(res.text);
+  it('should update the read status of a message', function(done) {
+    const MessageId = '651aed1ea3295378a20cd8a0';
+    request(app)
+        .patch(`/messages/${MessageId}`)
+        .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(["\"Post marked as unread.\"", "\"Post marked as read.\""]).to.include(res.text);
   
-  //           done();
-  //       });
-  //   });
+            done();
+        });
+    });
 
 //--------------------------------------------------------------------------------------------------------------------------
  
   it('should fetch a specific message with its ID', function(done) {
-  const MessageId = '651a8ae4e0ec1c07b854ed61';
+  const MessageId = '651aed1ea3295378a20cd8a0';
 
   request(app)
       .get(`/messages/${MessageId}`)
@@ -152,3 +161,18 @@ describe('GET /messages/:id', () => {
   });
 });
 
+// PATCH Request with Invalid ID
+describe('PATCH /messages/:id', () => {
+
+  it('should return 400 for a post ID with invalid character', function(done) {
+    
+    const invalidId = '¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥';
+
+    request(app)
+      .patch(`/messages/${invalidId}`)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      });
+  });
+});
