@@ -55,9 +55,6 @@ function showMessage(messageObject) {
     const card = document.createElement('div');
     card.className = 'card';
 
-    console.log(messageObject)
-    console.log("BBBBBBBBBBBBBBBB", messageObject._id)
-
     card._id = messageObject._id
     card.author = messageObject.author
     card.message = messageObject.message

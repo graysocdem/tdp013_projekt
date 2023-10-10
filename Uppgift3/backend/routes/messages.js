@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Post = require('../models/post')
 
-//Helmet mot mongodb-injections??
+var sanitize = require('mongo-sanitize')
 
 router.all('/', async (req, res) => {
 
@@ -46,10 +46,10 @@ router.all('/:id', async (req, res) => {
 
 async function messagesPost(req, res) {
     const post = new Post({
-        author: req.body.author,
-        message: req.body.message,
-        timestamp: req.body.timestamp,
-        read: req.body.read
+        author: sanitize(req.body.author),
+        message: sanitize(req.body.message),
+        timestamp: sanitize(req.body.timestamp),
+        read: sanitize(req.body.read)
     })
     try {
         await post.save()
@@ -70,13 +70,14 @@ async function messagesGet(req, res) {
 
 
 async function idPatch(req, res) {
+    cleanID = sanitize(req.params.id)
     console.log(req.params.id)
-    if (invalidId(req.params.id)) {
+    if (invalidId(cleanID)) {
         res.status(400).send("Invalid parameter")
         return
     }
 
-    const post = await Post.findById(req.params.id)
+    const post = await Post.findById(cleanID)
     if (post.read) {
         post.read = false
         res.json("Post marked as unread.")
@@ -95,8 +96,10 @@ async function idPatch(req, res) {
 }
 
 async function idGet(req, res) {
+    cleanID = sanitize(req.params.id)
+
     try {
-        const post = await Post.findById(req.params.id)
+        const post = await Post.findById(cleanID)
         res.status(200)
         res.json(post)
         
