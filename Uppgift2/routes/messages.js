@@ -65,10 +65,6 @@ async function fetchPostById(req, res) {
 
     try {
         const post = await Post.findById(req.params.id)
-        // if (!post) {
-        //     res.status(400).send("Invalid ID")
-        //     return
-        // }
         res.status(200)
         res.json(post)
         

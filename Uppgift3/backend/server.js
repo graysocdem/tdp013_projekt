@@ -1,13 +1,12 @@
 require('dotenv').config()
 
-
 const express = require('express')
 const app = express()
 var cors = require('cors')
 const mongoose = require('mongoose')
 
 const corsOptions = {
-    origin: 'http://localhost:5500',
+    origin: 'http://127.0.0.1:5500',
     methods: "GET,POST,PATCH"
 }
 
