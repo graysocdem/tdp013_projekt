@@ -4,41 +4,35 @@ import Navbar from "../Navigation/Navbar"
 import Friend from "../Friend/Friend"
 import Request from "../Request/Request"
 
+import fetchUser from "../../Scripts/fetchUser.js"
+
 const Friendlist = () => {
 
     const ownerName = localStorage.getItem("user")
     const [owner, setOwner] = useState(null)
 
-    const fetchOwner = () => {
+    useEffect(() => {
+        setOwner(fetchUser(ownerName))
+    }, [])
 
-        fetch(`http://localhost:3000/user/${ownerName}`, {
-            headers: {
-                "content-type": "application/json"
-            },
-            method: "GET"
-        })
-            .then(response => response.json())
-            .then(response => { setOwner(response[0]) })
-            .finally(response => console.log("fetched owner", response))
-    }
+    // const [updateState, setUpdateState] = useState(1)
+    // function update() {
+    //     setUser(setOwner)
+    //     setUpdateState(updateState * -1)
 
+    // }
 
-    const [user, setUser] = useState(null)
+    // const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
 
 
     useEffect(() => {
-        setUser(fetchOwner())
-    }, [])
-
-    useEffect(() => {
         console.log("useEffect owner", owner)
-        if (owner !== null) { setLoading(false) }
+        if (typeof owner !== Promise && owner !== null) { setLoading(false) }
     }, [owner])
 
     if (!loading) {
-        console.log("owner här här hej hej", owner)
         return (
             <div className='container'>
                 <Navbar />
@@ -56,7 +50,7 @@ const Friendlist = () => {
                     <div className='sub-container'>
                         <h1>Requests</h1>
                         {owner.requests.map((suitor) => (
-                            <Request suitor={suitor} owner={ownerName} />
+                            <Request suitor={suitor} owner={ownerName}/>
                         ))}                     
                     </div>
                 </div>

@@ -18,9 +18,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/facer')
 app.get('/user/:username', async (req, res) => {
   const { username } = req.params
   const query = User.find({ username: username})
-  const result = await query
+  const results = await query
+  let result = [];
+  if (results.length !== 0) { result = results[0] }
+  
   //DEBUG
-  console.log("Got user")
   res.status(200).send(JSON.stringify(result))
 })
 

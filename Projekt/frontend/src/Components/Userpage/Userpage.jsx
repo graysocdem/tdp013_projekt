@@ -1,11 +1,11 @@
 import { React, useRef, useState, useEffect } from 'react'
-import { useParams, useNavigate, useResolvedPath } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./Userpage.css"
 import Navbar from "../Navigation/Navbar"
 import Post from "../Post/Post"
-// import Friendbutton from "../Friendbutton/Friendbutton"
 
 const Userpage = () => {
+
     const navigate = useNavigate()
 
     const ownerName = useParams().username
@@ -17,10 +17,11 @@ const Userpage = () => {
     const [friendStatus, setFriendStatus] = useState(null)
 
     if (ownerName === visitorName) {
-        navigate("/")
+        navigate("/homepage")
     }
 
     const messageInputRef = useRef()
+    const friendButtonRef = useRef()
 
     const publishPost = async (e) => {
         e.preventDefault()
@@ -78,6 +79,7 @@ const Userpage = () => {
     const fetchFriendStatus = () => {
         
         if (ownerObject.requests.includes(visitorName)) {
+            console.log("friendButtonRef", friendButtonRef)
             return "pending"
         }
         else if (ownerObject.friends.includes(visitorName)) {
@@ -100,6 +102,25 @@ const Userpage = () => {
                 body: JSON.stringify({owner: ownerName, suitor: visitorName}),
                 method: "POST"
             })
+            setFriendStatus("pending")
+        }
+
+        //skickas som sträng pga osäkert om setFriendStatus hinner klart tills den kommer hit
+        setFriendButtonColor("pending")
+
+    }
+
+    const setFriendButtonColor = (status) => {
+        if (status === "pending") {
+            friendButtonRef.current.style.backgroundColor = "yellow"
+            friendButtonRef.current.value = "Request pending"
+        }
+        else if (status === "accepted") {
+            friendButtonRef.current.style.backgroundColor = "green"
+            friendButtonRef.current.value = "Friend"
+        }
+        else {
+            friendButtonRef.current.value = "Send friend request"
         }
     }
 
@@ -114,14 +135,16 @@ const Userpage = () => {
 
     useEffect(() => {
         if (posts != null && ownerObject != null) { setLoading(false) }
+        if (!loading) {
+            setFriendButtonColor(friendStatus)
+        }
     }, [posts, ownerObject])
 
     useEffect(() => {
         const interval = setInterval(() => fetchPosts(), 1000);
         return () => { clearInterval(interval) }
     }, []);
-
-
+        
     if (loading) {
         return (
             <div className='container'>
@@ -156,15 +179,7 @@ const Userpage = () => {
                     <div className='text'>{ownerName}'s Page</div>
                     <div className='underline'></div>
 
-                    {
-                        (() => {
-                            // return (<Friendbutton state={friendStatus}/>)
-                            return (
-                            <input className="friend-button" type="button" onClick={() => handleRequest()} value={`Friend status: ${friendStatus}`}></input>
-                            )
-                        })()
-                    }
-                    
+                            <input className="friend-button" type="button" onClick={ () => handleRequest() } ref={ friendButtonRef }></input>                    
                 </div>
 
                 <div className='wrapper'>

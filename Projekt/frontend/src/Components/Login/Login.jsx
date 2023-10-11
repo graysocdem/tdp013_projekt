@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import bcrypt from 'bcryptjs'
 
 import './Login.css'
+import '../../Scripts/fetchUser'
 
 const Login = () => {
     
@@ -30,25 +31,15 @@ const Login = () => {
             return
         }
 
-        // const salt = "DaveIsTheGOAT"
         const hashedPassword = bcrypt.hashSync(password, 10)
 
-        let user = []
-        await fetch(`http://localhost:3000/user/${username}`, {
-            headers: {
-                "content-type": "application/json"
-            },
-            method: "GET"
-        })
-            .then(response => response.json())
-            .then(response => { user = response })
-
+        let user = fetchUser(username)
 
         console.log("user:", user)
         if (user.length === 0) {
             console.log("USER DOES NOT EXIST")
-
-            await fetch(`http://localhost:3000/user`, {
+            
+            const response = await fetch(`http://localhost:3000/user`, {
                 headers: {
                     "content-type": "application/json"
                 },
@@ -56,8 +47,7 @@ const Login = () => {
                 method: "POST"
             })
                 .then(response => response.json())
-                .then(response => console.log(response))
-
+            
             alert("You have been signed up!")
 
         }
@@ -76,27 +66,22 @@ const Login = () => {
         const username = usernameInputRef.current.value
         const password = passwordInputRef.current.value
 
-        if (username === "" || password === "") {
+        if ( username === "" || password === "" ) {
             alert("Please fill out both forms.")
             return
         }
 
-        let user = []
-        await fetch(`http://localhost:3000/user/${username}`, {
-            headers: {
-                "content-type": "application/json"
-            },
-            method: "GET"
-        })
-            .then(response => response.json())
-            .then(response => { user = response })
+        let user = null
+        user = fetchUser(username)
 
-        if (user.length === 0) {
+        console.log("user", user)
+
+        if (user === null) {
             alert("User does not exist")
         }
         else {
-
-            bcrypt.compare(password, user[0].password, (err, result) => {
+            console.log("JAG HAMNAR HÄR")
+            bcrypt.compare(password, user.password, (err, result) => {
                 console.log("result of comparison:", err, result)
                 if (err) {
                     console.log("oops")
