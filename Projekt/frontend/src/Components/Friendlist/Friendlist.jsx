@@ -10,29 +10,21 @@ const Friendlist = () => {
 
     const ownerName = localStorage.getItem("user")
     const [owner, setOwner] = useState(null)
-
-    useEffect(() => {
-        setOwner(fetchUser(ownerName))
-    }, [])
-
-    // const [updateState, setUpdateState] = useState(1)
-    // function update() {
-    //     setUser(setOwner)
-    //     setUpdateState(updateState * -1)
-
-    // }
-
-    // const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
-
+    useEffect(() => {
+        const middle = async () => {
+            setOwner(await fetchUser(ownerName))
+        }
+        middle()
+    }, [])
 
     useEffect(() => {
-        console.log("useEffect owner", owner)
         if (typeof owner !== Promise && owner !== null) { setLoading(false) }
     }, [owner])
 
     if (!loading) {
+        console.log("loading:", loading)
         return (
             <div className='container'>
                 <Navbar />

@@ -4,6 +4,10 @@ import "./Userpage.css"
 import Navbar from "../Navigation/Navbar"
 import Post from "../Post/Post"
 
+import fetchUser from "../../Scripts/fetchUser.js"
+import fetchPosts from "../../Scripts/fetchPosts.js"
+
+
 const Userpage = () => {
 
     const navigate = useNavigate()
@@ -17,6 +21,7 @@ const Userpage = () => {
     const [friendStatus, setFriendStatus] = useState(null)
 
     if (ownerName === visitorName) {
+        console.log("equal:", ownerName, visitorName)
         navigate("/homepage")
     }
 
@@ -48,32 +53,6 @@ const Userpage = () => {
             body: JSON.stringify({ owner: ownerName, user: visitorName, message: message, timestamp: timestamp }),
             method: "POST"
         })
-    }
-
-    const fetchPosts = async () => {
-
-        await fetch(`http://localhost:3000/page/${ownerName}`, {
-            headers: {
-                "content-type": "application/json"
-            },
-            method: "GET"
-        })
-            .then(response => response.json())
-            .then(response => { setPosts(response[0].posts.reverse()) })
-            .finally(console.log("fetched posts"))
-    }
-
-    const fetchOwner = async () => {
-
-        await fetch(`http://localhost:3000/user/${ownerName}`, {
-            headers: {
-                "content-type": "application/json"
-            },
-            method: "GET"
-        })
-            .then(response => response.json())
-            .then(response => { setOwner(response[0]) })
-            .finally(console.log("fetched owner"))
     }
 
     const fetchFriendStatus = () => {
@@ -125,8 +104,11 @@ const Userpage = () => {
     }
 
     useEffect(() => {
-        fetchOwner()
-        fetchPosts()
+        const middle = async () => {
+            setOwner(await fetchUser(ownerName))
+            setPosts(await fetchPosts(ownerName))
+        }
+        middle()
     }, []);
 
     useEffect(() => {
@@ -141,7 +123,7 @@ const Userpage = () => {
     }, [posts, ownerObject])
 
     useEffect(() => {
-        const interval = setInterval(() => fetchPosts(), 1000);
+        const interval = setInterval(async () => await fetchPosts(ownerName), 1000);
         return () => { clearInterval(interval) }
     }, []);
         
@@ -171,7 +153,7 @@ const Userpage = () => {
         if (ownerObject.friends.includes(visitorName)) {
             
         }
-
+        console.log("posts", posts)
         return (
             <div className='container'>
                 <Navbar />

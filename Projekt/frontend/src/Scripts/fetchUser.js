@@ -1,13 +1,13 @@
-//Returns first in array of search results from owner
 const fetchUser = async (user) => {
 
-    return await fetch(`http://localhost:3000/user/${user}`, {
+   const response = await fetch(`http://localhost:3000/user/${user}`, {
         headers: {
             'Content-Type': 'application/json'
         },
         method: "GET"
     })
-        .then(res => res.json())
+    const result = await response.json()
+    return result
 }
 
 export default fetchUser

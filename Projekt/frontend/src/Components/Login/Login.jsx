@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import bcrypt from 'bcryptjs'
 
 import './Login.css'
-import '../../Scripts/fetchUser'
+import fetchUser from '../../Scripts/fetchUser'
 
 const Login = () => {
     
@@ -12,6 +12,13 @@ const Login = () => {
     const [action, setAction] = useState("Login")
     const usernameInputRef = useRef()
     const passwordInputRef = useRef()
+
+    useEffect(() => {
+        if (localStorage.getItem("user")) {
+            navigate("/homepage")
+        }
+    })
+
 
     const handleSignup = async (e) => {
         e.preventDefault()
@@ -22,7 +29,6 @@ const Login = () => {
             alert("Please fill out both forms.")
             usernameInputRef.current.value = ""
             passwordInputRef.current.value = ""
-
             return
         }
         if (username.indexOf(' ') >= 0) {
@@ -33,7 +39,7 @@ const Login = () => {
 
         const hashedPassword = bcrypt.hashSync(password, 10)
 
-        let user = fetchUser(username)
+        let user = await fetchUser(username)
 
         console.log("user:", user)
         if (user.length === 0) {
@@ -52,12 +58,10 @@ const Login = () => {
 
         }
 
-
         else {
             alert("User already exists!")
             //TODO visa användaren user already exists 
         }
-
     }
 
     const handleLogin = async (e) => {
@@ -71,12 +75,12 @@ const Login = () => {
             return
         }
 
-        let user = null
-        user = fetchUser(username)
+        // let user = null
+        let user = await fetchUser(username)
 
         console.log("user", user)
 
-        if (user === null) {
+        if (user.length === 0) {
             alert("User does not exist")
         }
         else {

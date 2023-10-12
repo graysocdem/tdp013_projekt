@@ -26,6 +26,20 @@ app.get('/user/:username', async (req, res) => {
   res.status(200).send(JSON.stringify(result))
 })
 
+//Get page
+app.get('/page/:owner', async (req, res) => {
+  const { owner } = req.params
+  const query = Page.find({ owner: owner})
+  const results = await query
+  console.log("results:", results)
+
+  let result = []
+  if (results.length !== 0) { result = results[0].posts}
+  console.log("result:", result)
+  console.log("Sent page")
+  res.status(200).send(JSON.stringify(result))
+})
+
 app.get('/users', async (req, res) => {
   const query = User.find()
   const result = await query
@@ -79,16 +93,6 @@ app.post('/post', async (req, res) => {
 
   console.log("Saved post")
   res.status(200).send()
-})
-
-//Get page
-app.get('/page/:owner', async (req, res) => {
-  const { owner } = req.params
-  
-  const query = Page.find({ owner: owner})
-  const result = await query
-  console.log("Sent page")
-  res.status(200).send(JSON.stringify(result))
 })
 
 //send request
