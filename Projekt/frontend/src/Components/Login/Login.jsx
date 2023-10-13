@@ -45,14 +45,13 @@ const Login = () => {
         if (user.length === 0) {
             console.log("USER DOES NOT EXIST")
             
-            const response = await fetch(`http://localhost:3000/user`, {
+            await fetch(`http://localhost:3000/user`, {
                 headers: {
                     "content-type": "application/json"
                 },
                 body: JSON.stringify({ username: username, password: hashedPassword }),
                 method: "POST"
             })
-                .then(response => response.json())
             
             alert("You have been signed up!")
 
@@ -77,8 +76,6 @@ const Login = () => {
 
         // let user = null
         let user = await fetchUser(username)
-
-        console.log("user", user)
 
         if (user.length === 0) {
             alert("User does not exist")

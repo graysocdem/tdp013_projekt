@@ -17,9 +17,6 @@ const Friendlist = () => {
             setOwner(await fetchUser(ownerName))
         }
         middle()
-    }, [])
-
-    useEffect(() => {
         if (typeof owner !== Promise && owner !== null) { setLoading(false) }
     }, [owner])
 
@@ -32,6 +29,7 @@ const Friendlist = () => {
                     <div className='text'>Friends</div>
                     <div className='underline'></div>
                 </div>
+
                 <div className='friend-container'>
                     <div className='sub-container'>
                         <h1>Friends</h1>
@@ -46,12 +44,22 @@ const Friendlist = () => {
                         ))}                     
                     </div>
                 </div>
+                
             </div>
 
         )
     }
     else {
-        return ("Loading...")
+        return ( <div className='container'>
+                <Navbar />
+                <div className='header'>
+                    <div className='text'>Friends</div>
+                    <div className='underline'></div>
+                </div>
+
+                <h1> Loading... </h1>
+                
+            </div>)
     }
 }
 

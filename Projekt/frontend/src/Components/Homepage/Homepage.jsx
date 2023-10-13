@@ -2,13 +2,23 @@ import { React, useRef, useState, useEffect } from 'react'
 import "./Homepage.css"
 import Navbar from "../Navigation/Navbar"
 import Post from "../Post/Post"
-import { Navigate } from 'react-router-dom'
+import { useNavigate, useLocation} from 'react-router-dom'
+
 
 import fetchPosts from "../../Scripts/fetchPosts.js"
 import publishPost from "../../Scripts/publishPost.js"
 
 
 const Homepage = () => {
+    
+    const navigate = useNavigate();
+    const location = useLocation().pathname;
+
+    useEffect(() => {
+        if (!location === "/homepage")  {
+            navigate("/homepage")
+        }
+    }, [])
 
     const ownerName = localStorage.getItem("user")
 

@@ -2,9 +2,14 @@ import { React } from 'react'
 import './Request.css'
 
 const Request = (props) => {
-    
     const handleAccept = () => {
-        props.update()
+        fetch(`http://localhost:3000/accept`, {
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({ owner: props.owner, suitor: props.suitor }),
+            method: "PATCH"
+        })
     }
 
     return (
