@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import bcrypt from 'bcryptjs'
 
 import './Login.css'
+import MyRoutes from '../MyRoutes/MyRoutes'
+
 import fetchUser from '../../Scripts/fetchUser'
 
 const Login = () => {
@@ -12,13 +14,16 @@ const Login = () => {
     const [action, setAction] = useState("Login")
     const usernameInputRef = useRef()
     const passwordInputRef = useRef()
+    const location = useLocation().pathname;
 
     useEffect(() => {
         if (localStorage.getItem("user")) {
-            navigate("/homepage")
+            return (<MyRoutes />)
         }
-    })
-
+        if (location !== "/") {
+            navigate("/")
+        }
+    }, [])
 
     const handleSignup = async (e) => {
         e.preventDefault()
@@ -74,14 +79,12 @@ const Login = () => {
             return
         }
 
-        // let user = null
         let user = await fetchUser(username)
 
         if (user.length === 0) {
             alert("User does not exist")
         }
         else {
-            console.log("JAG HAMNAR HÄR")
             bcrypt.compare(password, user.password, (err, result) => {
                 console.log("result of comparison:", err, result)
                 if (err) {

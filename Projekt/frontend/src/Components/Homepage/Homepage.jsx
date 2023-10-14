@@ -15,7 +15,7 @@ const Homepage = () => {
     const location = useLocation().pathname;
 
     useEffect(() => {
-        if (!location === "/homepage")  {
+        if (location !== "/homepage")  {
             navigate("/homepage")
         }
     }, [])

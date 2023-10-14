@@ -15,19 +15,16 @@ const Search = () => {
         setLoading(true)
 
         const query = queryInputRef.current.value
-        
         if (query.length === 0) {
             setUsers(fetchUsers())
             return
         }
 
         const re = new RegExp(query);
-
         const results = users.filter((user) => {
             return re.test(user.username)
         })
             
-        console.log(results)
         setUsers(results)
     }
 
@@ -88,7 +85,6 @@ const Search = () => {
 
         </div>
     )
-
 }
 
 export default Search

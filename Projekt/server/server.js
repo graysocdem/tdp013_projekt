@@ -31,11 +31,9 @@ app.get('/page/:owner', async (req, res) => {
   const { owner } = req.params
   const query = Page.find({ owner: owner})
   const results = await query
-  console.log("results:", results)
 
   let result = []
   if (results.length !== 0) { result = results[0].posts}
-  console.log("result:", result)
   console.log("Sent page")
   res.status(200).send(JSON.stringify(result))
 })
@@ -44,7 +42,6 @@ app.get('/users', async (req, res) => {
   const query = User.find()
   const result = await query
 
-  console.log(result)
   res.status(200).send(JSON.stringify(result))
 })
 
@@ -112,10 +109,7 @@ app.post("/:username/request", async (req, res) => {
 
 //accept request
 app.patch("/accept", async (req, res) => {
-  console.log("JAG KOMMER IN HÄR ÖVER HUVUD TAGET")
   const { owner, suitor } = req.body
-
-  console.log("HÄR KOMMER CALLE", owner, suitor)
 
   await User.findOneAndUpdate(
     { username: owner },
@@ -131,8 +125,10 @@ app.patch("/accept", async (req, res) => {
     { username: suitor },
     { $push: { friends: owner} }
   )
-
-
+  await User.findOneAndUpdate(
+    { username: suitor },
+    { $pull: { requests: owner}}
+  )
 
   console.log("Updated")
   res.status(200).send()
