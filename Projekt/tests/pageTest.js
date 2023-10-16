@@ -20,7 +20,9 @@ describe('Page and Post Operations', () => {
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
-        assert(Array.isArray(res.body), 'Response should be an array of posts');
+        const hej = JSON.toString(res.body)
+        console.log(res.body)
+        assert(Array.isArray(JSON.toString(res.body)), 'Response should be an array of posts');
         done();
       });
   });

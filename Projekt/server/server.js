@@ -48,6 +48,23 @@ app.get('/users', async (req, res) => {
 //Sign up
 app.post('/user', async (req, res) => {
   const { username, password } = req.body
+  console.log("Yo mmamaama")
+
+  let conflictResult = await fetch(`http://localhost:3000/user/${username}`, {
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    method: "GET"
+}).then(console.log("din mammaaaaaaaaaaaaaaaaaaaaaaaaa"))
+  console.log("woops")
+  console.log(conflictResult)
+  conflictResult = await conflictResult.json() 
+  console.log("Yo mmamaama",conflictResult)
+  if (conflictResult.length !== 0) {
+    console.log("NEJ")
+    res.status(409).send( {response: "User already exists"} );
+  }
+
   const user = new User({
     username: username,
     password: password,
@@ -134,4 +151,7 @@ app.patch("/accept", async (req, res) => {
   res.status(200).send()
 
 })
-app.listen(port, () => console.log(`Listening on port ${port}`)); 
+
+//app.listen(port, () => console.log(`Listening on port ${port}`)); 
+
+module.exports = app
