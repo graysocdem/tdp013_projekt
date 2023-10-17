@@ -3,7 +3,7 @@ const request = require('supertest');
 const app = require('../server/server.js'); 
 
 describe('User Registration and Authentication', () => {
-  it('should register a new user', (done) => {
+  it('should register a new user', function(done) {
     request(app)
       .post('/user')
       .send({ username: 'ElonTest', password: 'ElonSecret123' })
@@ -19,33 +19,36 @@ describe('User Registration and Authentication', () => {
     request(app)
       .post('/user')
       .send({ username: 'ElonTest', password: 'ElonSecret123' })
-      .expect(400)
+      .expect(409)
       .end((err, res) => {
         if (err) return done(err);
         done();
       });
   });
 
-  it('should log in an existing user', (done) => {
-    request(app)
-      .post('/login')
-      .send({ username: 'ElonTest', password: 'ElonSecret123' })
-      .expect(200)
-      .end((err, res) => {
-        if (err) return done(err);
-        assert.equal(res.body.username, 'testuser');
-        done();
-      });
-  });
 
-  it('should fail to log in with incorrect credentials', (done) => {
-    request(app)
-      .post('/login')
-      .send({ username: 'ElonTest', password: 'ElonTruth123' })
-      .expect(401)
-      .end((err, res) => {
-        if (err) return done(err);
-        done();
-      });
-  });
+//Test nedan får vänta tills vi gjort om authentication med JTW (när han skickar kompletteringen)
+
+//   it('should log in an existing user', (done) => {
+//     request(app)
+//       .post('/login')
+//       .send({ username: 'ElonTest', password: 'ElonSecret123' })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         assert.equal(res.body.username, 'testuser');
+//         done();
+//       });
+//   });
+
+//   it('should fail to log in with incorrect credentials', (done) => {
+//     request(app)
+//       .post('/login')
+//       .send({ username: 'ElonTest', password: 'ElonTruth123' })
+//       .expect(401)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         done();
+//       });
+//   });
 });

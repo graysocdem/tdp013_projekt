@@ -32,10 +32,7 @@ app.get('/page/:owner', async (req, res) => {
   const query = Page.find({ owner: owner})
   const results = await query
 
-  let result = []
-  if (results.length !== 0) { result = results[0].posts}
-  console.log("Sent page")
-  res.status(200).send(JSON.stringify(result))
+  results.length !== 0 ? res.send(res.status(200).send(JSON.stringify(results[0].posts))) : res.status(204).send()
 })
 
 app.get('/users', async (req, res) => {
@@ -48,21 +45,18 @@ app.get('/users', async (req, res) => {
 //Sign up
 app.post('/user', async (req, res) => {
   const { username, password } = req.body
-  console.log("Yo mmamaama")
 
-  let conflictResult = await fetch(`http://localhost:3000/user/${username}`, {
+  let conflictResult = await fetch(`http://localhost:${port}/user/${username}`, {
     headers: {
         'Content-Type': 'application/json'
     },
     method: "GET"
-}).then(console.log("din mammaaaaaaaaaaaaaaaaaaaaaaaaa"))
-  console.log("woops")
-  console.log(conflictResult)
+})
   conflictResult = await conflictResult.json() 
-  console.log("Yo mmamaama",conflictResult)
+  console.log("conflictResult:", conflictResult)
   if (conflictResult.length !== 0) {
-    console.log("NEJ")
     res.status(409).send( {response: "User already exists"} );
+    return
   }
 
   const user = new User({
@@ -152,6 +146,6 @@ app.patch("/accept", async (req, res) => {
 
 })
 
-//app.listen(port, () => console.log(`Listening on port ${port}`)); 
+app.listen(port, () => console.log(`Listening on port ${port}`)); 
 
 module.exports = app
