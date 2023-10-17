@@ -31,15 +31,14 @@ app.get('/page/:owner', async (req, res) => {
   const { owner } = req.params
   const query = Page.find({ owner: owner})
   const results = await query
-
-  results.length !== 0 ? res.send(res.status(200).send(JSON.stringify(results[0].posts))) : res.status(204).send()
+  results.length !== 0 ? res.status(200).send(JSON.stringify(results[0].posts)) : res.status(204).send()
 })
 
 app.get('/users', async (req, res) => {
   const query = User.find()
   const result = await query
 
-  res.status(200).send(JSON.stringify(result))
+  res.status(200).send(result)
 })
 
 //Sign up
@@ -53,7 +52,6 @@ app.post('/user', async (req, res) => {
     method: "GET"
 })
   conflictResult = await conflictResult.json() 
-  console.log("conflictResult:", conflictResult)
   if (conflictResult.length !== 0) {
     res.status(409).send( {response: "User already exists"} );
     return
@@ -77,7 +75,7 @@ app.post('/user', async (req, res) => {
       console.log("Created user")
       res.status(200).send( {response: "User created"} );
   }   catch (err) {
-      res.status(400).send( {response: err} )
+      res.status(500).send( {response: err} )
   }
 })
 
@@ -108,7 +106,6 @@ app.post("/:username/request", async (req, res) => {
 
   const { owner, suitor  } = req.body
 
-  console.log(owner, suitor)
   await User.findOneAndUpdate(
     { username: owner },
     { $push: { requests: suitor } }

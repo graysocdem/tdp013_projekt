@@ -22,9 +22,6 @@ describe('Page and Post Operations', () => {
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
-        console.log("???????????????????")
-        const hej = JSON.toString(res)
-        console.log("!!!!!!!!!!!!!!!!!!!!", hej)
         assert(Object.keys(JSON.toString(res)).length !== 0, 'Response should be an array of posts');
         done();
       });

@@ -1,7 +1,25 @@
+/*
+Session
+Friend request-knappen - avkodifiera
+Livechatt
+*/
+
 const assert = require('assert');
 const request = require('supertest');
 const app = require('../server/server.js'); 
+const mongoose = require('mongoose');
+const User = require('../server/models/User.js');
+const Post = require('../server/models/Post.js');
+const Page = require('../server/models/Page.js');
 
+mongoose.connect('mongodb://localhost:27017/facer')
+
+before(async () => {
+  await User.deleteMany({})
+  await Post.deleteMany({})
+  await Page.deleteMany({})
+})
+    
 describe('User Registration and Authentication', () => {
   it('should register a new user', function(done) {
     request(app)
@@ -26,6 +44,17 @@ describe('User Registration and Authentication', () => {
       });
   });
 
+  it('should get all users', (done) => {
+    request(app)
+      .get('/users')
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err)
+        assert(Array.isArray(res.body), 'Response should be an array of users')
+        assert(res.body.length > 0, "User amount should be over 0")
+        done()
+      }) 
+  })
 
 //Test nedan får vänta tills vi gjort om authentication med JTW (när han skickar kompletteringen)
 
