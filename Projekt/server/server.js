@@ -1,7 +1,11 @@
 const bcrypt = require('bcryptjs')
 const express = require('express') 
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
 const cors = require('cors')
+
+const https = require('https')
+
 const User = require('./models/User')
 const Page = require('./models/Page')
 const Post = require('./models/Post')
@@ -9,10 +13,22 @@ const Post = require('./models/Post')
 const app = express(); 
 const port = 3000;
 
+require('dotenv').config()
+
 app.use(cors())
 app.use(express.json())
 
 mongoose.connect('mongodb://127.0.0.1:27017/facer')
+
+const fetchUser = async(username) => {
+  let result = await fetch(`http://localhost:${port}/user/${username}`, {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: "GET"
+  })
+  return await result.json()
+}
 
 //Get user
 app.get('/user/:username', async (req, res) => {
@@ -22,7 +38,6 @@ app.get('/user/:username', async (req, res) => {
   let result = [];
   if (results.length !== 0) { result = results[0] }
   
-  //DEBUG
   res.status(200).send(JSON.stringify(result))
 })
 
@@ -38,6 +53,7 @@ app.get('/page/:owner', async (req, res) => {
   res.status(200).send(JSON.stringify(result))
 })
 
+//Get all users
 app.get('/users', async (req, res) => {
   const query = User.find()
   const result = await query
@@ -48,26 +64,65 @@ app.get('/users', async (req, res) => {
 //Sign up
 app.post('/user', async (req, res) => {
   const { username, password } = req.body
+
+  const existingUser = await fetchUser(username)
+
+  if (existingUser.length !== 0) {
+    res.status(409)
+    return
+  }
+
   const user = new User({
     username: username,
     password: password,
     friends: [],
-    requests: []
+    requests: [],
+    token: jwt.sign(
+      { username: username },
+      process.env.SERVER_SECRET,
+      {
+        expiresIn: "2h",
+      }
+    )
   })
 
   const page = new Page({
     owner: username,
-    post: []
+    posts: []
   })
 
-  try {
-      await page.save()
-      await user.save()
-      console.log("Created user")
-      res.status(200).send( {response: "User created"} );
-  }   catch (err) {
-      res.status(400).send( {response: err} )
+    await user.save()
+    // console.log("hej")
+    await page.save()
+    // console.log("Created user")
+    res.status(201).send( {response: "User created"} );
+    // res.status(400).send( {response: err} )
+  
+})
+
+//Login
+app.post('/login', async (req, res) => {
+    
+  const {username, password} = req.body
+  const answer = await fetchUser(username)
+
+  // console.log("answer:", answer)
+  console.log(password, answer.password)
+  if (username == answer.username) {
+    bcrypt.compare(password, answer.password, (err, result) => {
+              if (err) {
+                  console.log("oops!", err)
+              }
+              if (result) {
+                  console.log("success!")
+              }
+              else {
+                  console.log("failure!")
+              }
+          })
   }
+
+
 })
 
 //Publish post

@@ -13,7 +13,7 @@ const Search = () => {
     const handleSearch = () => {
                 
         setLoading(true)
-
+                
         const query = queryInputRef.current.value
         if (query.length === 0) {
             setUsers(fetchUsers())
@@ -70,7 +70,7 @@ const Search = () => {
             </div>
             <div className='search-container'>
                 <div className='input'>
-                    <input type="text" placeholder="vem letar du efter? vi är ingen jävla upplysningstjänst 118800 my ass" ref={queryInputRef}/>
+                    <input type="text" placeholder="Vem letar du efter?" ref={queryInputRef}/>
                 </div>
                 <div className='search-button' onClick={() => handleSearch()}>Sök</div>
             </div>

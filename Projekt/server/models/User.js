@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
     requests: {
         type: Array,
         required: true
+    },
+    token: {
+        type: String,
+        required: true
     }
 })
 

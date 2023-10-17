@@ -50,16 +50,20 @@ const Login = () => {
         if (user.length === 0) {
             console.log("USER DOES NOT EXIST")
             
-            await fetch(`http://localhost:3000/user`, {
+            const res = await fetch(`https://localhost:3000/user`, {
                 headers: {
                     "content-type": "application/json"
                 },
                 body: JSON.stringify({ username: username, password: hashedPassword }),
                 method: "POST"
             })
-            
-            alert("You have been signed up!")
 
+            if (res.status === 201) {
+                alert("You have been signed up!")
+            }
+            else {
+                alert("Error " + res.status + " occured.") 
+            }
         }
 
         else {
@@ -79,26 +83,37 @@ const Login = () => {
             return
         }
 
-        let user = await fetchUser(username)
+        const hashedPassword = bcrypt.hashSync(password, 10)
 
-        if (user.length === 0) {
-            alert("User does not exist")
-        }
-        else {
-            bcrypt.compare(password, user.password, (err, result) => {
-                console.log("result of comparison:", err, result)
-                if (err) {
-                    console.log("oops")
-                }
-                if (result) {
-                    localStorage.setItem("user", username)
-                    navigate("/homepage")
-                }
-                else {
-                    alert("Wrong username and/or password")
-                }
+        const response = await fetch(`http://localhost:3000/login`, {
+                headers: {
+                     'Content-Type': 'application/json'
+                 },
+                method: "POST",
+                body: JSON.stringify({username: username, password: hashedPassword}),
             })
-        }
+
+
+        console.log(response)
+
+        // let user = await fetchUser(username)
+
+
+        // else {
+        //     bcrypt.compare(password, user.password, (err, result) => {
+        //         console.log("result of comparison:", err, result)
+        //         if (err) {
+        //             console.log("oops")
+        //         }
+        //         if (result) {
+        //             localStorage.setItem("user", username)
+        //             navigate("/homepage")
+        //         }
+        //         else {
+        //             alert("Wrong username and/or password")
+        //         }
+        //     })
+        // }
     }
 
     return (
