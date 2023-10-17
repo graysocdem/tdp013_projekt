@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "supertest": "^6.3.3"
+  },
+  "dependencies": {
+    "mocha": "^10.2.0",
+    "mongoose": "^7.6.2"
+  }
+}

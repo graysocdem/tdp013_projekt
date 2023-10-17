@@ -46,9 +46,7 @@ const Login = () => {
 
         let user = await fetchUser(username)
 
-        console.log("user:", user)
         if (user.length === 0) {
-            console.log("USER DOES NOT EXIST")
             
             const res = await fetch(`https://localhost:3000/user`, {
                 headers: {

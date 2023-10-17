@@ -2,22 +2,43 @@ import { React, useState, useEffect, useRef } from 'react'
 import "./Search.css"
 import Navbar from "../Navigation/Navbar"
 import User from "../User/User"
+import fetchUsers from '../../Scripts/fethUsers'
 
 const Search = () => {
 
     const [users, setUsers] = useState(null)
+    const [displayUsers, setDisplayUsers] = useState(null)
     const [loading, setLoading] = useState(true)
 
     const queryInputRef = useRef()
 
+    useEffect(() => {
+        const middle = async () => {
+            setUsers(await fetchUsers())
+        }
+        middle()
+    }, []);
+
+    useEffect(() => {
+        if (users !== null) { setDisplayUsers(users) }
+    }, [users])
+
+    useEffect(() => {
+        if (displayUsers !== null) { setLoading(false) }
+    }, [displayUsers])
+
     const handleSearch = () => {
                 
         setLoading(true)
+<<<<<<< HEAD
                 
+=======
+        
+>>>>>>> 69ef09862fd0cfa0244d159db1dfd854722dd629
         const query = queryInputRef.current.value
+
         if (query.length === 0) {
-            setUsers(fetchUsers())
-            return
+            setDisplayUsers(users)
         }
 
         const re = new RegExp(query);
@@ -25,27 +46,8 @@ const Search = () => {
             return re.test(user.username)
         })
             
-        setUsers(results)
+        setDisplayUsers(results)
     }
-
-    const fetchUsers = () => {
-        fetch(`http://localhost:3000/users`, {
-            headers: {
-                "content-type": "application/json"
-            },
-            method: "GET"
-        })
-            .then(response => response.json())
-            .then(response => { setUsers(response) })
-    }
-
-    useEffect(() => {
-        fetchUsers()
-    }, []);
-
-    useEffect(() => {
-        if (users != null) { setLoading(false) }
-    }, [users])
 
     if (loading) {
         return( 
@@ -78,7 +80,7 @@ const Search = () => {
             <hr />
 
             <div className='wrapper'>
-                {users.map((user) => (
+                {displayUsers.map((user) => (
                     <User key={user.timestamp} name={user.username} friendAmount={user.friends.length}/>
                 ))}
             </div>

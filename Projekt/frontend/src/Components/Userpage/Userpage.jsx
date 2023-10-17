@@ -123,7 +123,7 @@ const Userpage = () => {
     }, [posts, ownerObject])
 
     useEffect(() => {
-        const interval = setInterval(async () => await fetchPosts(ownerName), 1000);
+        const interval = setInterval(async () => setPosts( await fetchPosts(ownerName)), 1000);
         return () => { clearInterval(interval) }
     }, []);
         

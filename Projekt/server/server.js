@@ -46,11 +46,7 @@ app.get('/page/:owner', async (req, res) => {
   const { owner } = req.params
   const query = Page.find({ owner: owner})
   const results = await query
-
-  let result = []
-  if (results.length !== 0) { result = results[0].posts}
-  console.log("Sent page")
-  res.status(200).send(JSON.stringify(result))
+  results.length !== 0 ? res.status(200).send(JSON.stringify(results[0].posts)) : res.status(204).send()
 })
 
 //Get all users
@@ -58,17 +54,22 @@ app.get('/users', async (req, res) => {
   const query = User.find()
   const result = await query
 
-  res.status(200).send(JSON.stringify(result))
+  res.status(200).send(result)
 })
 
 //Sign up
 app.post('/user', async (req, res) => {
   const { username, password } = req.body
 
-  const existingUser = await fetchUser(username)
-
-  if (existingUser.length !== 0) {
-    res.status(409)
+  let conflictResult = await fetch(`http://localhost:${port}/user/${username}`, {
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    method: "GET"
+})
+  conflictResult = await conflictResult.json() 
+  if (conflictResult.length !== 0) {
+    res.status(409).send( {response: "User already exists"} );
     return
   }
 
@@ -152,7 +153,6 @@ app.post("/:username/request", async (req, res) => {
 
   const { owner, suitor  } = req.body
 
-  console.log(owner, suitor)
   await User.findOneAndUpdate(
     { username: owner },
     { $push: { requests: suitor } }
@@ -189,4 +189,7 @@ app.patch("/accept", async (req, res) => {
   res.status(200).send()
 
 })
+
 app.listen(port, () => console.log(`Listening on port ${port}`)); 
+
+module.exports = app
