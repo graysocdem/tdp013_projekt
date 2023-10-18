@@ -5,18 +5,21 @@ const jwt = require('jsonwebtoken')
 const cors = require('cors')
 
 const https = require('https')
+const http = require('http')
+const fs = require('fs')
 
 const User = require('./models/User')
 const Page = require('./models/Page')
 const Post = require('./models/Post')
 
-const app = express(); 
+const httpApp = express() 
+const httpsApp = express()
 const port = 3000;
 
 require('dotenv').config()
 
-app.use(cors())
-app.use(express.json())
+httpApp.use(cors())
+httpApp.use(express.json())
 
 mongoose.connect('mongodb://127.0.0.1:27017/facer')
 
@@ -31,7 +34,7 @@ const fetchUser = async(username) => {
 }
 
 //Get user
-app.get('/user/:username', async (req, res) => {
+httpApp.get('/user/:username', async (req, res) => {
   const { username } = req.params
   const query = User.find({ username: username})
   const results = await query
@@ -42,7 +45,7 @@ app.get('/user/:username', async (req, res) => {
 })
 
 //Get page
-app.get('/page/:owner', async (req, res) => {
+httpApp.get('/page/:owner', async (req, res) => {
   const { owner } = req.params
   const query = Page.find({ owner: owner})
   const results = await query
@@ -50,7 +53,7 @@ app.get('/page/:owner', async (req, res) => {
 })
 
 //Get all users
-app.get('/users', async (req, res) => {
+httpApp.get('/users', async (req, res) => {
   const query = User.find()
   const result = await query
 
@@ -58,7 +61,7 @@ app.get('/users', async (req, res) => {
 })
 
 //Sign up
-app.post('/user', async (req, res) => {
+httpApp.post('/user', async (req, res) => {
   const { username, password } = req.body
 
   let conflictResult = await fetch(`http://localhost:${port}/user/${username}`, {
@@ -102,8 +105,8 @@ app.post('/user', async (req, res) => {
 })
 
 //Login
-app.post('/login', async (req, res) => {
-    
+httpsApp.post('/login', async (req, res) => {
+  console.log("i am here!")
   const {username, password} = req.body
   const answer = await fetchUser(username)
 
@@ -127,7 +130,7 @@ app.post('/login', async (req, res) => {
 })
 
 //Publish post
-app.post('/post', async (req, res) => {
+httpApp.post('/post', async (req, res) => {
 
   const { owner, user, message, timestamp } = req.body
 
@@ -149,7 +152,7 @@ app.post('/post', async (req, res) => {
 })
 
 //send request
-app.post("/:username/request", async (req, res) => {
+httpApp.post("/:username/request", async (req, res) => {
 
   const { owner, suitor  } = req.body
 
@@ -163,7 +166,7 @@ app.post("/:username/request", async (req, res) => {
 })
 
 //accept request
-app.patch("/accept", async (req, res) => {
+httpApp.patch("/accept", async (req, res) => {
   const { owner, suitor } = req.body
 
   await User.findOneAndUpdate(
@@ -190,6 +193,13 @@ app.patch("/accept", async (req, res) => {
 
 })
 
-app.listen(port, () => console.log(`Listening on port ${port}`)); 
+const httpsOptions = { 
+  key: fs.readFileSync("./certs/server.key"), 
+  cert: fs.readFileSync("./certs/server.cert"), 
+}; 
 
-module.exports = app
+https.createServer(httpsOptions, httpsApp).listen(3443, (req, res) => { console.log("HTTPS server started at port 3443") })
+http.createServer(httpApp).listen(3000, (req, res) => { console.log("HTTP server started at port 3000") })
+// httpApp.listen(port, () => console.log(`Listening on port ${port}`)); 
+
+module.exports = httpApp

@@ -48,7 +48,7 @@ const Login = () => {
 
         if (user.length === 0) {
             
-            const res = await fetch(`https://localhost:3000/user`, {
+            const res = await fetch(`http://localhost:3000/user`, {
                 headers: {
                     "content-type": "application/json"
                 },
@@ -83,7 +83,7 @@ const Login = () => {
 
         const hashedPassword = bcrypt.hashSync(password, 10)
 
-        const response = await fetch(`http://localhost:3000/login`, {
+        const response = await fetch(`https://localhost:3443/login`, {
                 headers: {
                      'Content-Type': 'application/json'
                  },

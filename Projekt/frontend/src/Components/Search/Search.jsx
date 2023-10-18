@@ -30,11 +30,7 @@ const Search = () => {
     const handleSearch = () => {
                 
         setLoading(true)
-<<<<<<< HEAD
                 
-=======
-        
->>>>>>> 69ef09862fd0cfa0244d159db1dfd854722dd629
         const query = queryInputRef.current.value
 
         if (query.length === 0) {
