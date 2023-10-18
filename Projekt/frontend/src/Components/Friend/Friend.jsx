@@ -12,7 +12,7 @@ const Friend = (props) => {
         <div className="request-container">
             <div className='name'>{props.name}</div>
             <div className='accept-button' type="button" value="knapp">
-                <input type="button" value="Visit page" onClick={() => {navigate(`/${props.name}`)}}></input>
+                <input type="button" value="Visit page" onClick={() => {navigate(`/user/${props.name}`)}}></input>
             </div>
         </div>
     )

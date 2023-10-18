@@ -1,8 +1,9 @@
-const fetchUser = async (user) => {
+const fetchUser = async (user, token) => {
 
    const response = await fetch(`http://localhost:3000/user/${user}`, {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-access-token': token
         },
         method: "GET"
     })

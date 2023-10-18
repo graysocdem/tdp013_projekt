@@ -18,10 +18,12 @@ const Login = () => {
 
 
     useEffect(() => {
-        console.log("update")
         const middle = () => {
+            console.log("update")
+
             if (localStorage.getItem("user")) {
                 console.log("returning")
+                navigate("/homepage")
                 return (<MyRoutes />)
             }
             if (location !== "/") {
@@ -88,7 +90,7 @@ const Login = () => {
 
         let response = await fetch(`https://localhost:3443/login`, {
                 headers: {
-                     'Content-Type': 'application/json'
+                     'Content-Type': 'application/json',
                  },
                 method: "POST",
                 body: JSON.stringify({username: username, password: password}),
@@ -98,7 +100,7 @@ const Login = () => {
             response = await response.json()
             localStorage.setItem("user", response.username)
             localStorage.setItem("token", response.token)
-            navigate("/homepage")
+            console.log("HEJ!", localStorage.getItem("user"), localStorage.getItem("token"))
             forceUpdate(true)
         }
         else {

@@ -48,7 +48,7 @@ const Homepage = () => {
 
     useEffect(() => {
         const middle = async () => {
-            let posts = await fetchPosts(ownerName)
+            let posts = await fetchPosts(ownerName, localStorage.getItem("token"))
             console.log("posts:", posts)
             setPosts(posts.reverse())
         }
@@ -56,7 +56,7 @@ const Homepage = () => {
     }, []);
 
     useEffect(() => {
-        const interval = setInterval(async () => { const results = await fetchPosts(ownerName); setPosts(results.reverse()) }, 1000);
+        const interval = setInterval(async () => { const results = await fetchPosts(ownerName, localStorage.getItem("token")); setPosts(results.reverse()) }, 1000);
         return () => {clearInterval(interval)} 
     }, []);
 
@@ -64,6 +64,7 @@ const Homepage = () => {
         if (posts != null) {setLoading(false)}
     }, [posts])
 
+    
     if (loading) {
         return (
             <div className='container'>

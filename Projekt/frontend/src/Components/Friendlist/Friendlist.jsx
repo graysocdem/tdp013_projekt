@@ -14,7 +14,7 @@ const Friendlist = () => {
 
     useEffect(() => {
         const middle = async () => {
-            setOwner(await fetchUser(ownerName))
+            setOwner(await fetchUser(ownerName, localStorage.getItem("token")))
         }
         middle()
         if (typeof owner !== Promise && owner !== null) { setLoading(false) }

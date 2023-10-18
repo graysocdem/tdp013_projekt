@@ -10,7 +10,7 @@ const User = (props) => {
 
     console.log(encodeURIComponent(props.name))
     return (
-        <div className="user-container" onClick={() => {localUser === props.name ? navigate("/homepage") : navigate(`/${props.name}`)}} >
+        <div className="user-container" onClick={() => {localUser === props.name ? navigate("/homepage") : navigate(`/user/${props.name}`)}} >
             <div className="name">
                 Name: {props.name}
             </div>

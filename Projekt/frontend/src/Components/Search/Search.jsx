@@ -66,6 +66,7 @@ const Search = () => {
                 <div className='text'>Search</div>
                 <div className='underline'></div>
             </div>
+            
             <div className='search-container'>
                 <div className='input'>
                     <input type="text" placeholder="Vem letar du efter?" ref={queryInputRef}/>

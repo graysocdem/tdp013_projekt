@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs')
 const express = require('express')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
+const auth = require('./auth')
 const cors = require('cors')
 
 const https = require('https')
@@ -40,7 +41,7 @@ const fetchUser = async (username) => {
 }
 
 //Get user
-httpApp.get('/user/:username', async (req, res) => {
+httpApp.get('/user/:username', auth, async (req, res) => {
   const { username } = req.params
   const query = User.find({ username: username })
   const results = await query
@@ -51,15 +52,15 @@ httpApp.get('/user/:username', async (req, res) => {
 })
 
 //Get page
-httpApp.get('/page/:owner', async (req, res) => {
-  const { owner } = req.params
-  const query = Page.find({ owner: owner })
+httpApp.get('/page/:user', auth, async (req, res) => {
+  const { user } = req.params
+  const query = Page.find({ owner: user })
   const results = await query
   results.length !== 0 ? res.status(200).send(JSON.stringify(results[0].posts)) : res.status(204).send()
 })
 
 //Get all users
-httpApp.get('/users', async (req, res) => {
+httpApp.get('/users', auth, async (req, res) => {
   const query = User.find()
   const result = await query
 
@@ -67,7 +68,7 @@ httpApp.get('/users', async (req, res) => {
 })
 
 //Sign up
-httpApp.post('/user', async (req, res) => {
+httpApp.post('/user', auth, async (req, res) => {
   const { username, password } = req.body
 
   let conflictResult = await fetch(`http://localhost:${port}/user/${username}`, {
@@ -114,7 +115,7 @@ httpApp.post('/user', async (req, res) => {
 httpsApp.post('/login', async (req, res) => {
   const { username, password } = req.body
   const user = await fetchUser(username)
-
+  console.log("hej!!!!!!!!!!!!!!!!!")
   // console.log("answer:", answer)
   console.log(password, user.password)
   if (username == user.username) {
@@ -146,7 +147,7 @@ httpsApp.post('/login', async (req, res) => {
 })
 
 //Publish post
-httpApp.post('/post', async (req, res) => {
+httpApp.post('/post', auth, async (req, res) => {
 
   const { owner, user, message, timestamp } = req.body
 
@@ -168,7 +169,7 @@ httpApp.post('/post', async (req, res) => {
 })
 
 //send request
-httpApp.post("/:username/request", async (req, res) => {
+httpApp.post("/:username/request", auth, async (req, res) => {
 
   const { owner, suitor } = req.body
 
@@ -182,7 +183,7 @@ httpApp.post("/:username/request", async (req, res) => {
 })
 
 //accept request
-httpApp.patch("/accept", async (req, res) => {
+httpApp.patch("/accept", auth, async (req, res) => {
   const { owner, suitor } = req.body
 
   await User.findOneAndUpdate(
