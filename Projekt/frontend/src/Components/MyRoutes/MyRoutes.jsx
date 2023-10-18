@@ -4,14 +4,14 @@ import Login from '../Login/Login'
 import Friendlist from '../Friendlist/Friendlist'
 import Search from '../Search/Search'
 import Error from '../Error/Error'
-import { useNavigate, Route, Routes } from "react-router-dom"
+import { Route, Routes } from "react-router-dom"
 
 const MyRoutes = () => {
 
-    const navigate = useNavigate()
     const user = localStorage.getItem("user")
-
+    console.log("nu kommer jag!")
     if (user !== null) {
+        console.log("här är jag!")
         return (
             <Routes>
                 <Route path="/" element={<Homepage />}/>

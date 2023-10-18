@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const express = require('express') 
+const express = require('express')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
@@ -12,18 +12,24 @@ const User = require('./models/User')
 const Page = require('./models/Page')
 const Post = require('./models/Post')
 
-const httpApp = express() 
+const httpApp = express()
 const httpsApp = express()
 const port = 3000;
 
 require('dotenv').config()
 
+const httpsCorsOptions = {
+  origin: "*"
+}
+
 httpApp.use(cors())
 httpApp.use(express.json())
+httpsApp.use(cors(httpsCorsOptions))
+httpsApp.use(express.json())
 
 mongoose.connect('mongodb://127.0.0.1:27017/facer')
 
-const fetchUser = async(username) => {
+const fetchUser = async (username) => {
   let result = await fetch(`http://localhost:${port}/user/${username}`, {
     headers: {
       'Content-Type': 'application/json'
@@ -36,18 +42,18 @@ const fetchUser = async(username) => {
 //Get user
 httpApp.get('/user/:username', async (req, res) => {
   const { username } = req.params
-  const query = User.find({ username: username})
+  const query = User.find({ username: username })
   const results = await query
   let result = [];
   if (results.length !== 0) { result = results[0] }
-  
+
   res.status(200).send(JSON.stringify(result))
 })
 
 //Get page
 httpApp.get('/page/:owner', async (req, res) => {
   const { owner } = req.params
-  const query = Page.find({ owner: owner})
+  const query = Page.find({ owner: owner })
   const results = await query
   results.length !== 0 ? res.status(200).send(JSON.stringify(results[0].posts)) : res.status(204).send()
 })
@@ -66,13 +72,13 @@ httpApp.post('/user', async (req, res) => {
 
   let conflictResult = await fetch(`http://localhost:${port}/user/${username}`, {
     headers: {
-        'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     },
     method: "GET"
-})
-  conflictResult = await conflictResult.json() 
+  })
+  conflictResult = await conflictResult.json()
   if (conflictResult.length !== 0) {
-    res.status(409).send( {response: "User already exists"} );
+    res.status(409).send({ response: "User already exists" });
     return
   }
 
@@ -95,37 +101,47 @@ httpApp.post('/user', async (req, res) => {
     posts: []
   })
 
-    await user.save()
-    // console.log("hej")
-    await page.save()
-    // console.log("Created user")
-    res.status(201).send( {response: "User created"} );
-    // res.status(400).send( {response: err} )
-  
+  await user.save()
+  // console.log("hej")
+  await page.save()
+  // console.log("Created user")
+  res.status(201).send({ response: "User created" });
+  // res.status(400).send( {response: err} )
+
 })
 
 //Login
 httpsApp.post('/login', async (req, res) => {
-  console.log("i am here!")
-  const {username, password} = req.body
-  const answer = await fetchUser(username)
+  const { username, password } = req.body
+  const user = await fetchUser(username)
 
   // console.log("answer:", answer)
-  console.log(password, answer.password)
-  if (username == answer.username) {
-    bcrypt.compare(password, answer.password, (err, result) => {
-              if (err) {
-                  console.log("oops!", err)
-              }
-              if (result) {
-                  console.log("success!")
-              }
-              else {
-                  console.log("failure!")
-              }
-          })
-  }
+  console.log(password, user.password)
+  if (username == user.username) {
+    bcrypt.compare(password, user.password, (err, result) => {
 
+      if (err) {
+        console.log("oops!", err)
+      }
+
+      if (result) {
+        token = jwt.sign(
+          { username: username },
+          process.env.TOKEN_KEY,
+          {
+            expiresIn: "2h"
+          }
+        )
+        res.status(201).send( { username: username, token: token } )
+        return
+      }
+      else {
+        res.status(401)
+        console.log("failure!")
+        return
+      }
+    })
+  }
 
 })
 
@@ -144,7 +160,7 @@ httpApp.post('/post', async (req, res) => {
     { owner: owner },
     { $push: { posts: post } }
   )
-  
+
   post.save()
 
   console.log("Saved post")
@@ -154,7 +170,7 @@ httpApp.post('/post', async (req, res) => {
 //send request
 httpApp.post("/:username/request", async (req, res) => {
 
-  const { owner, suitor  } = req.body
+  const { owner, suitor } = req.body
 
   await User.findOneAndUpdate(
     { username: owner },
@@ -171,21 +187,21 @@ httpApp.patch("/accept", async (req, res) => {
 
   await User.findOneAndUpdate(
     { username: owner },
-    { $push: { friends: suitor}}
+    { $push: { friends: suitor } }
   )
 
   await User.findOneAndUpdate(
     { username: owner },
-    { $pull: { requests: suitor}}
+    { $pull: { requests: suitor } }
   )
 
   await User.findOneAndUpdate(
     { username: suitor },
-    { $push: { friends: owner} }
+    { $push: { friends: owner } }
   )
   await User.findOneAndUpdate(
     { username: suitor },
-    { $pull: { requests: owner}}
+    { $pull: { requests: owner } }
   )
 
   console.log("Updated")
@@ -193,10 +209,10 @@ httpApp.patch("/accept", async (req, res) => {
 
 })
 
-const httpsOptions = { 
-  key: fs.readFileSync("./certs/server.key"), 
-  cert: fs.readFileSync("./certs/server.cert"), 
-}; 
+const httpsOptions = {
+  key: fs.readFileSync("./certs/server.key"),
+  cert: fs.readFileSync("./certs/server.cert"),
+};
 
 https.createServer(httpsOptions, httpsApp).listen(3443, (req, res) => { console.log("HTTPS server started at port 3443") })
 http.createServer(httpApp).listen(3000, (req, res) => { console.log("HTTP server started at port 3000") })

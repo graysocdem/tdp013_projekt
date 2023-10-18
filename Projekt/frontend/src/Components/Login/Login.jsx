@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, json } from 'react-router-dom'
 import bcrypt from 'bcryptjs'
 
 import './Login.css'
 import MyRoutes from '../MyRoutes/MyRoutes'
-
 import fetchUser from '../../Scripts/fetchUser'
 
 const Login = () => {
@@ -12,18 +11,25 @@ const Login = () => {
     const navigate = useNavigate()
 
     const [action, setAction] = useState("Login")
+    const [update, forceUpdate] = useState(false)
     const usernameInputRef = useRef()
     const passwordInputRef = useRef()
     const location = useLocation().pathname;
 
+
     useEffect(() => {
-        if (localStorage.getItem("user")) {
-            return (<MyRoutes />)
+        console.log("update")
+        const middle = () => {
+            if (localStorage.getItem("user")) {
+                console.log("returning")
+                return (<MyRoutes />)
+            }
+            if (location !== "/") {
+                navigate("/")
+            }
         }
-        if (location !== "/") {
-            navigate("/")
-        }
-    }, [])
+        middle()
+    }, [update])
 
     const handleSignup = async (e) => {
         e.preventDefault()
@@ -55,7 +61,6 @@ const Login = () => {
                 body: JSON.stringify({ username: username, password: hashedPassword }),
                 method: "POST"
             })
-
             if (res.status === 201) {
                 alert("You have been signed up!")
             }
@@ -81,37 +86,24 @@ const Login = () => {
             return
         }
 
-        const hashedPassword = bcrypt.hashSync(password, 10)
-
-        const response = await fetch(`https://localhost:3443/login`, {
+        let response = await fetch(`https://localhost:3443/login`, {
                 headers: {
                      'Content-Type': 'application/json'
                  },
                 method: "POST",
-                body: JSON.stringify({username: username, password: hashedPassword}),
+                body: JSON.stringify({username: username, password: password}),
             })
 
-
-        console.log(response)
-
-        // let user = await fetchUser(username)
-
-
-        // else {
-        //     bcrypt.compare(password, user.password, (err, result) => {
-        //         console.log("result of comparison:", err, result)
-        //         if (err) {
-        //             console.log("oops")
-        //         }
-        //         if (result) {
-        //             localStorage.setItem("user", username)
-        //             navigate("/homepage")
-        //         }
-        //         else {
-        //             alert("Wrong username and/or password")
-        //         }
-        //     })
-        // }
+        if (response.status === 201) {
+            response = await response.json()
+            localStorage.setItem("user", response.username)
+            localStorage.setItem("token", response.token)
+            navigate("/homepage")
+            forceUpdate(true)
+        }
+        else {
+            alert('Error ' + response.status)
+        }
     }
 
     return (

@@ -14,6 +14,12 @@ const Page = require('../server/models/Page.js');
 
 mongoose.connect('mongodb://localhost:27017/facer')
 
+// res.setHeader('Access-Control-Allow-Origin', '*');
+// res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+// res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+// res.setHeader('Cross-origin-Embedder-Policy', 'require-corp');
+// res.setHeader('Cross-origin-Opener-Policy', 'same-origin');
+
 before(async () => {
   await User.deleteMany({})
   await Post.deleteMany({})
