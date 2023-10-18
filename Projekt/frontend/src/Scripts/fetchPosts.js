@@ -1,5 +1,5 @@
-const fetchPosts = async (user, token) => {
-    console.log("hej!!")
+const fetchPosts = async (user, token, navigate) => {
+
     const response = await fetch(`http://localhost:3000/page/${user}`, {
          headers: {
              'Content-Type': 'application/json',
@@ -7,7 +7,9 @@ const fetchPosts = async (user, token) => {
          },
          method: "GET"
      })
-     console.log("response:", response)
+     if (response.status === 401) {
+        return null
+    }
      const result = await response.json()
      return result
  }

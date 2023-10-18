@@ -15,7 +15,7 @@ const Request = (props) => {
     return (
         <div className="request-container">
             <div className='name'>{props.suitor}</div>
-            <div className='accept-button' type="button" value="knapp">
+            <div className='accept-button' type="button">
                 <input type="button" value="Accept request" onClick={() => {handleAccept()}}></input>
             </div>
         </div>

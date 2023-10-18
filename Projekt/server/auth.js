@@ -4,23 +4,21 @@ const config = process.env
 
 const verify = (req, res, next) => {
     const token = req.headers['x-access-token']
-
     if (!token) {
-        return res.status(403)
+        return res.status(403).send()
     }
     else {
         try {
             const decoded = jwt.verify(token, config.TOKEN_KEY)
-            console.log(decoded)
-            req.user = decoded
-            console.log("jag lever!")
+            req.user = decoded.username
         }
         catch (err) {
-            console.log("hej")
-            return res.status(401)
+            console.log(err)
+            res.status(401).send()
+            return
         }
     }
-    return(next)
+    return next()
 }
 
 module.exports = verify

@@ -1,4 +1,4 @@
-const fetchUser = async (user, token) => {
+const fetchUser = async (user, token, navigate) => {
 
    const response = await fetch(`http://localhost:3000/user/${user}`, {
         headers: {
@@ -7,6 +7,9 @@ const fetchUser = async (user, token) => {
         },
         method: "GET"
     })
+    if (response.status === 401) {
+        return null
+    }
     const result = await response.json()
     return result
 }

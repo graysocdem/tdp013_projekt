@@ -30,16 +30,6 @@ httpsApp.use(express.json())
 
 mongoose.connect('mongodb://127.0.0.1:27017/facer')
 
-const fetchUser = async (username) => {
-  let result = await fetch(`http://localhost:${port}/user/${username}`, {
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    method: "GET"
-  })
-  return await result.json()
-}
-
 //Get user
 httpApp.get('/user/:username', auth, async (req, res) => {
   const { username } = req.params
@@ -53,6 +43,9 @@ httpApp.get('/user/:username', auth, async (req, res) => {
 
 //Get page
 httpApp.get('/page/:user', auth, async (req, res) => {
+
+  if (res.status === 401) { return }
+
   const { user } = req.params
   const query = Page.find({ owner: user })
   const results = await query
@@ -68,16 +61,14 @@ httpApp.get('/users', auth, async (req, res) => {
 })
 
 //Sign up
-httpApp.post('/user', auth, async (req, res) => {
+httpApp.post('/user', async (req, res) => {
   const { username, password } = req.body
 
-  let conflictResult = await fetch(`http://localhost:${port}/user/${username}`, {
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    method: "GET"
-  })
-  conflictResult = await conflictResult.json()
+  const query = User.find({ username: username })
+  const results = await query
+  let conflictResult = [];
+  if (results.length !== 0) { conflictResult = results[0] }
+
   if (conflictResult.length !== 0) {
     res.status(409).send({ response: "User already exists" });
     return
@@ -92,7 +83,7 @@ httpApp.post('/user', auth, async (req, res) => {
       { username: username },
       process.env.SERVER_SECRET,
       {
-        expiresIn: "2h",
+        expiresIn: 169766142000
       }
     )
   })
@@ -114,10 +105,12 @@ httpApp.post('/user', auth, async (req, res) => {
 //Login
 httpsApp.post('/login', async (req, res) => {
   const { username, password } = req.body
-  const user = await fetchUser(username)
-  console.log("hej!!!!!!!!!!!!!!!!!")
-  // console.log("answer:", answer)
-  console.log(password, user.password)
+
+  const query = User.find({ username: username })
+  const results = await query
+  let user = [];
+  if (results.length !== 0) { user = results[0] }
+
   if (username == user.username) {
     bcrypt.compare(password, user.password, (err, result) => {
 
@@ -130,7 +123,7 @@ httpsApp.post('/login', async (req, res) => {
           { username: username },
           process.env.TOKEN_KEY,
           {
-            expiresIn: "2h"
+            expiresIn: "1h"
           }
         )
         res.status(201).send( { username: username, token: token } )

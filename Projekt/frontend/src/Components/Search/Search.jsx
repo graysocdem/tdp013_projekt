@@ -14,7 +14,7 @@ const Search = () => {
 
     useEffect(() => {
         const middle = async () => {
-            setUsers(await fetchUsers())
+            setUsers(await fetchUsers(localStorage.getItem("token")))
         }
         middle()
     }, []);

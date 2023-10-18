@@ -4,7 +4,6 @@ import bcrypt from 'bcryptjs'
 
 import './Login.css'
 import MyRoutes from '../MyRoutes/MyRoutes'
-import fetchUser from '../../Scripts/fetchUser'
 
 const Login = () => {
     
@@ -15,7 +14,6 @@ const Login = () => {
     const usernameInputRef = useRef()
     const passwordInputRef = useRef()
     const location = useLocation().pathname;
-
 
     useEffect(() => {
         const middle = () => {
@@ -52,10 +50,6 @@ const Login = () => {
 
         const hashedPassword = bcrypt.hashSync(password, 10)
 
-        let user = await fetchUser(username)
-
-        if (user.length === 0) {
-            
             const res = await fetch(`http://localhost:3000/user`, {
                 headers: {
                     "content-type": "application/json"
@@ -66,20 +60,16 @@ const Login = () => {
             if (res.status === 201) {
                 alert("You have been signed up!")
             }
+            else if (res.status === 409) {
+                alert("User already exists!")
+            }
             else {
                 alert("Error " + res.status + " occured.") 
             }
-        }
-
-        else {
-            alert("User already exists!")
-            //TODO visa användaren user already exists 
-        }
     }
 
     const handleLogin = async (e) => {
         e.preventDefault()
-
         const username = usernameInputRef.current.value
         const password = passwordInputRef.current.value
 
@@ -90,7 +80,7 @@ const Login = () => {
 
         let response = await fetch(`https://localhost:3443/login`, {
                 headers: {
-                     'Content-Type': 'application/json',
+                     'Content-Type': 'application/json'
                  },
                 method: "POST",
                 body: JSON.stringify({username: username, password: password}),

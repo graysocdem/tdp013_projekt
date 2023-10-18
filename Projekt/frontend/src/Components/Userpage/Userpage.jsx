@@ -48,7 +48,8 @@ const Userpage = () => {
 
         await fetch(`http://localhost:3000/post`, {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                'x-access-token': localStorage.getItem("token")
             },
             body: JSON.stringify({ owner: ownerName, user: visitorName, message: message, timestamp: timestamp }),
             method: "POST"
@@ -76,7 +77,8 @@ const Userpage = () => {
         if (friendStatus === "unsent") {
             fetch(`http://localhost:3000/${ownerName}/request`, {
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
+                    'x-access-token': localStorage.getItem("token")
                 },
                 body: JSON.stringify({owner: ownerName, suitor: visitorName}),
                 method: "POST"
@@ -105,10 +107,25 @@ const Userpage = () => {
 
     useEffect(() => {
         const middle = async () => {
-            setOwner(await fetchUser(ownerName))
-            setPosts(await fetchPosts(ownerName))
+
+            const userResult = await fetchUser(ownerName, localStorage.getItem("token"))
+            const postsResult = await fetchPosts(ownerName, localStorage.getItem("token"))
+
+            if (userResult && postsResult) {
+                setOwner(userResult)
+                setPosts(postsResult)
+            }
+            else {
+                localStorage.clear()
+                navigate("/")
+            }
         }
         middle()
+    }, []);
+
+    useEffect(() => {
+        const interval = setInterval(async () => setPosts( await fetchPosts(ownerName, localStorage.getItem("token"))), 1000);
+        return () => { clearInterval(interval) }
     }, []);
 
     useEffect(() => {
@@ -122,11 +139,6 @@ const Userpage = () => {
         }
     }, [posts, ownerObject])
 
-    useEffect(() => {
-        const interval = setInterval(async () => setPosts( await fetchPosts(ownerName)), 1000);
-        return () => { clearInterval(interval) }
-    }, []);
-        
     if (loading) {
         return (
             <div className='container'>
@@ -149,11 +161,6 @@ const Userpage = () => {
         )
     }
     else {
-
-        if (ownerObject.friends.includes(visitorName)) {
-            
-        }
-        console.log("posts", posts)
         return (
             <div className='container'>
                 <Navbar />

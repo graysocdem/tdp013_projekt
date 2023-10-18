@@ -4,7 +4,6 @@ import Navbar from "../Navigation/Navbar"
 import Post from "../Post/Post"
 import { useNavigate, useLocation} from 'react-router-dom'
 
-
 import fetchPosts from "../../Scripts/fetchPosts.js"
 import publishPost from "../../Scripts/publishPost.js"
 
@@ -12,20 +11,39 @@ import publishPost from "../../Scripts/publishPost.js"
 const Homepage = () => {
     
     const navigate = useNavigate();
-    const location = useLocation().pathname;
+
+    const location = useLocation().pathname
 
     useEffect(() => {
         if (location !== "/homepage")  {
             navigate("/homepage")
         }
+
+        //Måste vara i funktion pga await kan ej köras i useEffect annars
+        const fetchInitialPosts = async () => {
+            let posts = await fetchPosts(ownerName, localStorage.getItem("token"), navigate)
+            if (posts === null) {
+                setTokenExpired(true)
+            }
+            console.log("posts:", posts)
+            if (posts) {setPosts(posts.reverse())}
+        }
+        fetchInitialPosts()
+
+        //AJAX - fetchar posts var femte sekund.
+        const interval = setInterval(async () => { const results = await fetchPosts(ownerName, localStorage.getItem("token"), navigate); results ? setPosts(results.reverse()) : setTokenExpired(true) }, 5000);
+        return () => {clearInterval(interval)} 
+
     }, [])
 
-    const ownerName = localStorage.getItem("user")
-
     const [posts, setPosts] = useState(null)
+    const [tokenExpired, setTokenExpired] = useState(false)
     const [loading, setLoading] = useState(true)
-
+    const ownerName = localStorage.getItem("user")
+    
     const messageInputRef = useRef()
+
+    //Publicerar meddelande
     const handlePublish = async (e) => {
         e.preventDefault()
         
@@ -38,30 +56,23 @@ const Homepage = () => {
 
         messageInputRef.current.value = ""
 
-        console.log(post.message.length)
         if (post.message.length === 0 || post.message.length > 140) {
             alert("Invalid message length")
-            return
         }
-        publishPost(post)
+        else { publishPost(post) }
     }
 
+    //Skickar till login när token har gått ut
     useEffect(() => {
-        const middle = async () => {
-            let posts = await fetchPosts(ownerName, localStorage.getItem("token"))
-            console.log("posts:", posts)
-            setPosts(posts.reverse())
+        if(tokenExpired) {
+            localStorage.clear()
+            navigate("/")
         }
-        middle()
-    }, []);
+    }, [tokenExpired])
 
+    //Stänger av loading när posts har laddat
     useEffect(() => {
-        const interval = setInterval(async () => { const results = await fetchPosts(ownerName, localStorage.getItem("token")); setPosts(results.reverse()) }, 1000);
-        return () => {clearInterval(interval)} 
-    }, []);
-
-    useEffect(() => {
-        if (posts != null) {setLoading(false)}
+        if (posts != null) {setLoading(false); return}
     }, [posts])
 
     
@@ -89,7 +100,6 @@ const Homepage = () => {
     }
     else {
         return (
-
             <div className='container'>
                 <Navbar />
                 <div className='header'>
@@ -103,12 +113,11 @@ const Homepage = () => {
     
                     <hr />
     
-                    { posts.map((post) => (
+                    { posts.map( (post) => (
                      <Post name={post.user} message={post.message} timestamp={post.timestamp} />
-                    ))} 
+                    ))}
                     
                 </div>
-
             </div>
         )
     }

@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import "./Friendlist.css"
 import Navbar from "../Navigation/Navbar"
 import Friend from "../Friend/Friend"
@@ -8,13 +9,32 @@ import fetchUser from "../../Scripts/fetchUser.js"
 
 const Friendlist = () => {
 
+    const navigate = useNavigate()
+
     const ownerName = localStorage.getItem("user")
     const [owner, setOwner] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [tokenExpired, setTokenExpired] = useState(false)
+
+    useEffect(() => {
+        localStorage.clear()
+        navigate("/")
+    }, [tokenExpired])
 
     useEffect(() => {
         const middle = async () => {
-            setOwner(await fetchUser(ownerName, localStorage.getItem("token")))
+            if (!owner) {
+                const result = await fetchUser(ownerName, localStorage.getItem("token"))
+
+                if (result) {
+                    setOwner(result)
+                }
+                else {
+                    localStorage.clear()
+                    navigate("/")
+
+                }
+            }
         }
         middle()
         if (typeof owner !== Promise && owner !== null) { setLoading(false) }
