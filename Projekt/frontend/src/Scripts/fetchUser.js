@@ -1,6 +1,6 @@
 const fetchUser = async (user, token, navigate) => {
 
-   const response = await fetch(`http://localhost:3000/user/${user}`, {
+    const response = await fetch(`http://localhost:3000/user/${user}`, {
         headers: {
             'Content-Type': 'application/json',
             'x-access-token': token

@@ -6,7 +6,8 @@ Livechatt
 
 const assert = require('assert');
 const request = require('supertest');
-const app = require('../server/server.js'); 
+const bcrypt = require('bcryptjs')
+const { httpApp, httpsApp } = require('../server/server.js'); 
 const mongoose = require('mongoose');
 const User = require('../server/models/User.js');
 const Post = require('../server/models/Post.js');
@@ -25,13 +26,14 @@ before(async () => {
   await Post.deleteMany({})
   await Page.deleteMany({})
 })
-    
+
+let token = ""
 describe('User Registration and Authentication', () => {
   it('should register a new user', function(done) {
-    request(app)
+    request(httpApp)
       .post('/user')
-      .send({ username: 'ElonTest', password: 'ElonSecret123' })
-      .expect(200)
+      .send({ username: 'ElonTest', password: bcrypt.hashSync('ElonSecret123', 10) })
+      .expect(201)
       .end((err, res) => {
         if (err) return done(err);
         assert.equal(res.body.response, 'User created');
@@ -40,7 +42,7 @@ describe('User Registration and Authentication', () => {
   });
 
   it('should fail to register a user with an existing username', (done) => {
-    request(app)
+    request(httpApp)
       .post('/user')
       .send({ username: 'ElonTest', password: 'ElonSecret123' })
       .expect(409)
@@ -50,9 +52,35 @@ describe('User Registration and Authentication', () => {
       });
   });
 
+  it('should log in an existing user', (done) => {
+    request(httpsApp)
+      .post('/login')
+      .send({ username: 'ElonTest', password: 'ElonSecret123' })
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        assert.equal(res.body.username, 'ElonTest');
+        assert(res.body.token !== null)
+        token = res.body.token
+        done();
+      });
+  });
+
+  it('should fail to log in with incorrect credentials', (done) => {
+    request(httpsApp)
+      .post('/login')
+      .send({ username: 'ElonTest', password: bcrypt.hashSync('ElonTruth123', 10)})
+      .expect(401)
+      .end((err, res) => {
+        if (err) return done(err);
+        done();
+      });
+  });
+
   it('should get all users', (done) => {
-    request(app)
+    request(httpApp)
       .get('/users')
+      .set('x-access-token', token)
       .expect(200)
       .end((err, res) => {
         if (err) return done(err)
@@ -61,29 +89,4 @@ describe('User Registration and Authentication', () => {
         done()
       }) 
   })
-
-//Test nedan får vänta tills vi gjort om authentication med JTW (när han skickar kompletteringen)
-
-//   it('should log in an existing user', (done) => {
-//     request(app)
-//       .post('/login')
-//       .send({ username: 'ElonTest', password: 'ElonSecret123' })
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return done(err);
-//         assert.equal(res.body.username, 'testuser');
-//         done();
-//       });
-//   });
-
-//   it('should fail to log in with incorrect credentials', (done) => {
-//     request(app)
-//       .post('/login')
-//       .send({ username: 'ElonTest', password: 'ElonTruth123' })
-//       .expect(401)
-//       .end((err, res) => {
-//         if (err) return done(err);
-//         done();
-//       });
-//   });
 });

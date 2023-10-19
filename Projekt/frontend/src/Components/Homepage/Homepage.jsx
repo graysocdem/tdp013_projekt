@@ -22,6 +22,7 @@ const Homepage = () => {
         //Måste vara i funktion pga await kan ej köras i useEffect annars
         const fetchInitialPosts = async () => {
             let posts = await fetchPosts(ownerName, localStorage.getItem("token"), navigate)
+            console.log("HÄR KOMMER DEt")
             if (posts === null) {
                 setTokenExpired(true)
             }
@@ -31,7 +32,7 @@ const Homepage = () => {
         fetchInitialPosts()
 
         //AJAX - fetchar posts var femte sekund.
-        const interval = setInterval(async () => { const results = await fetchPosts(ownerName, localStorage.getItem("token"), navigate); results ? setPosts(results.reverse()) : setTokenExpired(true) }, 5000);
+        const interval = setInterval(async () => { const results = await fetchPosts(ownerName, localStorage.getItem("token")); console.log("HEJ", results); results ? setPosts(results.reverse()) : setTokenExpired(true) }, 5000);
         return () => {clearInterval(interval)} 
 
     }, [])

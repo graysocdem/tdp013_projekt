@@ -17,11 +17,14 @@ const Friendlist = () => {
     const [tokenExpired, setTokenExpired] = useState(false)
 
     useEffect(() => {
-        localStorage.clear()
-        navigate("/")
+        if (tokenExpired) {
+            localStorage.clear()
+            navigate("/")
+        }
     }, [tokenExpired])
 
     useEffect(() => {
+
         const middle = async () => {
             if (!owner) {
                 const result = await fetchUser(ownerName, localStorage.getItem("token"))
@@ -30,14 +33,12 @@ const Friendlist = () => {
                     setOwner(result)
                 }
                 else {
-                    localStorage.clear()
-                    navigate("/")
-
+                    setTokenExpired(true)
                 }
             }
         }
         middle()
-        if (typeof owner !== Promise && owner !== null) { setLoading(false) }
+        if (owner !== null) { setLoading(false) }
     }, [owner])
 
     if (!loading) {
@@ -60,7 +61,7 @@ const Friendlist = () => {
                     <div className='sub-container'>
                         <h1>Requests</h1>
                         {owner.requests.map((suitor) => (
-                            <Request suitor={suitor} owner={ownerName}/>
+                            <Request suitor={suitor} ownerName={ownerName} />
                         ))}                     
                     </div>
                 </div>

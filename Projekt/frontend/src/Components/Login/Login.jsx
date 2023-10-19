@@ -86,7 +86,7 @@ const Login = () => {
                 body: JSON.stringify({username: username, password: password}),
             })
 
-        if (response.status === 201) {
+        if (response.status === 200) {
             response = await response.json()
             localStorage.setItem("user", response.username)
             localStorage.setItem("token", response.token)

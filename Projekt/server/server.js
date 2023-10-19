@@ -112,6 +112,7 @@ httpsApp.post('/login', async (req, res) => {
   if (results.length !== 0) { user = results[0] }
 
   if (username == user.username) {
+    console.log(password, user.password)
     bcrypt.compare(password, user.password, (err, result) => {
 
       if (err) {
@@ -119,6 +120,7 @@ httpsApp.post('/login', async (req, res) => {
       }
 
       if (result) {
+        console.log("success!")
         token = jwt.sign(
           { username: username },
           process.env.TOKEN_KEY,
@@ -126,12 +128,11 @@ httpsApp.post('/login', async (req, res) => {
             expiresIn: "1h"
           }
         )
-        res.status(201).send( { username: username, token: token } )
+        res.status(200).send( { username: username, token: token } )
         return
       }
       else {
-        res.status(401)
-        console.log("failure!")
+        res.status(401).send()
         return
       }
     })
@@ -179,6 +180,7 @@ httpApp.post("/:username/request", auth, async (req, res) => {
 httpApp.patch("/accept", auth, async (req, res) => {
   const { owner, suitor } = req.body
 
+  console.log(owner, suitor)
   await User.findOneAndUpdate(
     { username: owner },
     { $push: { friends: suitor } }
@@ -212,4 +214,7 @@ https.createServer(httpsOptions, httpsApp).listen(3443, (req, res) => { console.
 http.createServer(httpApp).listen(3000, (req, res) => { console.log("HTTP server started at port 3000") })
 // httpApp.listen(port, () => console.log(`Listening on port ${port}`)); 
 
-module.exports = httpApp
+module.exports = {
+  httpApp: httpApp,
+  httpsApp: httpsApp
+}
