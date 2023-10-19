@@ -1,13 +1,14 @@
-const bcrypt = require('bcryptjs')
 const express = require('express')
 const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken')
-const auth = require('./auth')
-const cors = require('cors')
-
 const https = require('https')
 const http = require('http')
+
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const auth = require('./auth')
 const fs = require('fs')
+
+require('dotenv').config()
 
 const User = require('./models/User')
 const Page = require('./models/Page')
@@ -15,17 +16,16 @@ const Post = require('./models/Post')
 
 const httpApp = express()
 const httpsApp = express()
-const port = 3000;
 
-require('dotenv').config()
+const cors = require('cors')
 
-const httpsCorsOptions = {
-  origin: "*"
+const corsOptions = {
+  origin: ['http://localhost:3001']
 }
 
-httpApp.use(cors())
+httpApp.use(cors(corsOptions))
 httpApp.use(express.json())
-httpsApp.use(cors(httpsCorsOptions))
+httpsApp.use(cors(corsOptions))
 httpsApp.use(express.json())
 
 mongoose.connect('mongodb://127.0.0.1:27017/facer')
@@ -83,7 +83,7 @@ httpApp.post('/user', async (req, res) => {
       { username: username },
       process.env.SERVER_SECRET,
       {
-        expiresIn: 169766142000
+        expiresIn: "1h"
       }
     )
   })
@@ -94,12 +94,8 @@ httpApp.post('/user', async (req, res) => {
   })
 
   await user.save()
-  // console.log("hej")
   await page.save()
-  // console.log("Created user")
   res.status(201).send({ response: "User created" });
-  // res.status(400).send( {response: err} )
-
 })
 
 //Login
@@ -112,15 +108,13 @@ httpsApp.post('/login', async (req, res) => {
   if (results.length !== 0) { user = results[0] }
 
   if (username == user.username) {
-    console.log(password, user.password)
     bcrypt.compare(password, user.password, (err, result) => {
 
       if (err) {
-        console.log("oops!", err)
+        res.status(500)
       }
 
       if (result) {
-        console.log("success!")
         token = jwt.sign(
           { username: username },
           process.env.TOKEN_KEY,
@@ -158,7 +152,6 @@ httpApp.post('/post', auth, async (req, res) => {
 
   post.save()
 
-  console.log("Saved post")
   res.status(200).send()
 })
 
@@ -171,8 +164,6 @@ httpApp.post("/:username/request", auth, async (req, res) => {
     { username: owner },
     { $push: { requests: suitor } }
   )
-
-  console.log("Saved request")
   res.status(200).send()
 })
 
@@ -181,7 +172,6 @@ httpApp.patch("/accept", auth, async (req, res) => {
 
   const { owner, suitor } = req.body
 
-  console.log(owner, suitor)
   await User.findOneAndUpdate(
     { username: owner },
     { $push: { friends: suitor } }
@@ -201,7 +191,6 @@ httpApp.patch("/accept", auth, async (req, res) => {
     { $pull: { requests: owner } }
   )
 
-  console.log("Updated")
   res.status(200).send()
 
 })
@@ -213,7 +202,6 @@ const httpsOptions = {
 
 https.createServer(httpsOptions, httpsApp).listen(3443, (req, res) => { console.log("HTTPS server started at port 3443") })
 http.createServer(httpApp).listen(3000, (req, res) => { console.log("HTTP server started at port 3000") })
-// httpApp.listen(port, () => console.log(`Listening on port ${port}`)); 
 
 module.exports = {
   httpApp: httpApp,

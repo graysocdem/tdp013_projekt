@@ -15,19 +15,3 @@ const pageSchema = new mongoose.Schema({
 
 module.exports = mongoose.model('Page', pageSchema)
 
-/* 
-
-["pages"]
-
-{
-    user: username,
-    posts [
-        {
-            poster: username,
-            text: text,
-            timestamp: timestamp
-        }
-    ]
-} 
-
-*/

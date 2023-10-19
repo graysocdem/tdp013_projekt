@@ -2,8 +2,8 @@ import { React, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import "./Friendlist.css"
 import Navbar from "../Navigation/Navbar"
-import Friend from "../Friend/Friend"
-import Request from "../Request/Request"
+import Friend from "./Friend/Friend"
+import Request from "./Request/Request"
 
 import fetchUser from "../../Scripts/fetchUser.js"
 
@@ -30,7 +30,6 @@ const Friendlist = () => {
             const result = await fetchUser(ownerName, localStorage.getItem("token"))
 
             if (result) {
-                console.log("Setting owner")
                 setOwner(result)
             }
             else {

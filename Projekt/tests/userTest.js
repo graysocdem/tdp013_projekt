@@ -1,9 +1,3 @@
-/*
-Session-tester
-Friend request-knappen - avkodifiera
-Livechatt
-*/
-
 const assert = require('assert');
 const request = require('supertest');
 const bcrypt = require('bcryptjs')
@@ -14,12 +8,6 @@ const Post = require('../server/models/Post.js');
 const Page = require('../server/models/Page.js');
 
 mongoose.connect('mongodb://localhost:27017/facer')
-
-// res.setHeader('Access-Control-Allow-Origin', '*');
-// res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-// res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-// res.setHeader('Cross-origin-Embedder-Policy', 'require-corp');
-// res.setHeader('Cross-origin-Opener-Policy', 'same-origin');
 
 before(async () => {
   await User.deleteMany({})
@@ -86,6 +74,20 @@ describe('User Registration and Authentication', () => {
         if (err) return done(err)
         assert(Array.isArray(res.body), 'Response should be an array of users')
         assert(res.body.length > 0, "User amount should be over 0")
+        done()
+      }) 
+  })
+
+  it('should get user', (done) => {
+    request(httpApp)
+      .get('/user/ElonTest')
+      .set('x-access-token', token)
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err)
+        let obj = JSON.parse(res.text)
+        assert(obj.username == "ElonTest", "Username should be \'ElonTest\'")
+        assert(Object.keys(obj).length > 0, 'Should not be empty')
         done()
       }) 
   })

@@ -1,6 +1,6 @@
 const Error = () => {
     return (
-        <h3> Ice Cube "The Predator", track 13 </h3>
+        <h3> Sidan du sökte kunde inte hittas. </h3>
     )
 }
 

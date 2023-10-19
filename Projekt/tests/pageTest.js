@@ -15,8 +15,7 @@ describe('Page and Post Operations', () => {
         done();
       });
   });
-
-
+  
   it('should retrieve posts from a user\'s page', (done) => {
     request(httpApp)
       .get('/page/ElonTest')

@@ -12,9 +12,7 @@ const MyRoutes = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-
         if (localStorage.getItem("user") === null) {
-            console.log("navigating to root")
             navigate("/")
         }
     }, [])

@@ -1,10 +1,10 @@
 import { React, useState, useEffect, useRef } from 'react'
 import "./Search.css"
 import Navbar from "../Navigation/Navbar"
-import User from "../User/User"
+import User from "./User/User"
 import fetchUsers from '../../Scripts/fethUsers'
-import { useNavigate
- } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+
 const Search = () => {
 
     const navigate = useNavigate()

@@ -13,7 +13,6 @@ const verify = (req, res, next) => {
             req.user = decoded.username
         }
         catch (err) {
-            console.log(err)
             res.status(401).send()
             return
         }

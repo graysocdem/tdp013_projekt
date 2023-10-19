@@ -40,17 +40,17 @@ const Userpage = () => {
         e.preventDefault()
 
         if (!ownerObject.friends.includes(visitorName)) {
-            alert("only friends can post !!!!!!!")
+            alert("Only friends of this user can post on their page!")
             return
         }
 
         const message = messageInputRef.current.value
-        const timestamp = new Date().toLocaleString('en-US', { timeZone: 'GMT' })
+        const timestamp = new Date().toLocaleString('en-US', { timeZone: 'CET' })
 
         messageInputRef.current.value = ""
 
         if (message.length === 0 || message.length > 140) {
-            alert("Invalid message length")
+            alert("Invalid message length. Your message must be between 0 and 140 characters.")
             return
         }
 
@@ -70,7 +70,6 @@ const Userpage = () => {
     const fetchFriendStatus = () => {
         
         if (ownerObject.requests.includes(visitorName)) {
-            console.log("friendButtonRef", friendButtonRef)
             return "pending"
         }
         else if (ownerObject.friends.includes(visitorName)) {
@@ -96,10 +95,8 @@ const Userpage = () => {
             })
             if (!result) {setTokenExpired(true)}
             setFriendStatus("pending")
+            setFriendButtonColor("pending")
         }
-
-        //skickas som sträng pga osäkert om setFriendStatus hinner klart tills den kommer hit
-        setFriendButtonColor("pending")
 
     }
 
@@ -203,7 +200,6 @@ const Userpage = () => {
             </div>
         )
     }
-
 
 }
 

@@ -17,10 +17,7 @@ const Login = () => {
 
     useEffect(() => {
         const middle = () => {
-            console.log("update")
-
             if (localStorage.getItem("user")) {
-                console.log("returning")
                 navigate("/homepage")
                 return (<MyRoutes />)
             }
@@ -43,7 +40,7 @@ const Login = () => {
             return
         }
         if (username.indexOf(' ') >= 0) {
-            alert("Invalid character in username. or something, prolly a blankspace #tswift")
+            alert("Invalid character in username. or something, probably a blankspace #tswift")
             usernameInputRef.current.value = ""
             return
         }
@@ -76,7 +73,7 @@ const Login = () => {
         if ( username === "" || password === "" ) {
             alert("Please fill out both forms.")
             return
-        }
+        } 
 
         let response = await fetch(`https://localhost:3443/login`, {
                 headers: {
@@ -107,10 +104,10 @@ const Login = () => {
 
             <div className='inputs'>
                 <div className='input'>
-                    <input type="text" placeholder="skriv ditt namn här eller nåt. upp till dig" ref={usernameInputRef} />
+                    <input type="text" placeholder="skriv ditt namn här. eller nåt. upp till dig" ref={usernameInputRef} />
                 </div>
                 <div className='input'>
-                    <input type="password" placeholder="lösenord här. om du känner för det" ref={passwordInputRef} />
+                    <input type="password" placeholder="lösenord. om du känner för det" ref={passwordInputRef} />
                 </div>
 
                 {action === "Sign Up"
