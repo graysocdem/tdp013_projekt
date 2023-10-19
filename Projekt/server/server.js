@@ -178,6 +178,7 @@ httpApp.post("/:username/request", auth, async (req, res) => {
 
 //accept request
 httpApp.patch("/accept", auth, async (req, res) => {
+
   const { owner, suitor } = req.body
 
   console.log(owner, suitor)

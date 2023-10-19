@@ -30,6 +30,7 @@ const Friendlist = () => {
             const result = await fetchUser(ownerName, localStorage.getItem("token"))
 
             if (result) {
+                console.log("Setting owner")
                 setOwner(result)
             }
             else {

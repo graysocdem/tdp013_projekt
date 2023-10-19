@@ -7,14 +7,11 @@ const Request = (props) => {
             headers: {
                 "content-type": "application/json",
                 'x-access-token': localStorage.getItem("token")
-                "content-type": "application/json",
-                'x-access-token': localStorage.getItem('token')
             },
-            body: JSON.stringify({ owner: props.ownerName, suitor: props.suitor }),
+            body: JSON.stringify({ owner: props.owner, suitor: props.suitor }),
             method: "PATCH"
         })
-        console.log("jag körs!")
-        props.forceUpdate(1)
+        props.forceUpdate(props.updateCounter + 1)
     }
 
     return (
