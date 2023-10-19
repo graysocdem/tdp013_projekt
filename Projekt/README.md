@@ -1,34 +1,36 @@
-Välkomna till Oskars (oskan896) och Emils (emigu041) webbprogrammeringsprojekt!
+# Välkomna till Oskars (oskan896) och Emils (emigu041) Webbprogrammeringsprojekt!
 
-Setup:
-Starta MongoDB
+## Setup
 
-Kontrollera att du har alla paket du behöver genom att skriva "npm install" i /server och /frontend.
+1. Starta MongoDB.
+2. Kontrollera att du har alla nödvändiga paket genom att köra `npm install` i både `/server` och `/frontend`-mapparna.
 
-Denna applikation använder sig av https, vilket kan vara lite krångligt att
-sätta upp. Vi har använt firefox men andra webbläsare borde också fungera.
+## HTTPS Setup
 
-På firefox:
+Denna applikation använder HTTPS, vilket kan vara lite krångligt att sätta upp. Vi har testat det med Firefox, men det borde fungera med andra webbläsare också.
 
-* Gå in i settings och sök på "certificates". 
+### Firefox Konfiguration
 
-* Klicka på "view certificates", sedan på "authorities" och sist på "import". 
+1. Öppna Firefox och gå till inställningarna.
+2. Sök efter "certificates".
+3. Klicka på "View Certificates".
+4. Klicka på "Authorities".
+5. Välj "Import" och navigera till `/server/certs`-mappen.
+6. Välj filen "server.cert".
+7. Markera alternativet för att tillåta identifiering av webbplatser.
+8. Starta servern genom att öppna terminalen och gå till `/server`, sedan kör `node server.js`.
+9. Öppna Firefox och besök "https://localhost:3443". En varningsskylt kommer att visas.
+10. Klicka på "Avancerat" och sedan "Acceptera risken och fortsätt".
+11. Du kan nu stänga fliken.
 
-* Navigera sedan till /server/certs och välj "server.cert".
+## Starta Applikationen
 
-* Checka alternativet för att tillåta identifiering av webbplatser.
+1. Gå till `/server` och starta servern genom att köra `node server.js`.
+2. Gå till `/frontend` och starta frontend-delen genom att köra `npm start`. Om du ombeds välja en annan port, skriv "y". Applikationen bör nu öppnas i Firefox. Om det inte gör det kan du öppna den manuellt genom att besöka "http://localhost:3001".
 
-* Starta servern genom att gå in i /server och skriva "node server.js".
+## Kör Tester
 
-* I firefox, skriv in "https://localhost:3443". Du bör nu se en ruta som avråder dig att fortsätta.
+För att köra tester, gå till `/server` och kör följande kommando:
 
-* Klicka på "avancerat" och sedan "Acceptera riksen och fortsätt". 
-
-* Du kan nu stänga ner fliken.
-
-För att starta applikationen, gå först in i /server och skriv "node server.js".
-Gå sedan in i /frontend och skriv "npm start". När den frågar om du vill köra
-på en annan port, skriv "y". Applikationen borde nu startas i firefox, men 
-du kan annars gå in på den via "http://localhost:3001".
-
-För att köra testerna, gå in i /server och skriv "npm test".
+```bash
+npm test
