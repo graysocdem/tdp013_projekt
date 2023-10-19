@@ -6,8 +6,6 @@ const Friend = (props) => {
 
     const navigate = useNavigate()
 
-    console.log("props", props)
-
     return (
         <div className="request-container">
             <div className='name'>{props.name}</div>

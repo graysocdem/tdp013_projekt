@@ -15,33 +15,35 @@ const Friendlist = () => {
     const [owner, setOwner] = useState(null)
     const [loading, setLoading] = useState(true)
     const [tokenExpired, setTokenExpired] = useState(false)
+    const [updateCounter, forceUpdate] = useState(0)
 
     useEffect(() => {
-        localStorage.clear()
-        navigate("/")
+        if (tokenExpired) {
+            localStorage.clear()
+            navigate("/")
+        }
     }, [tokenExpired])
 
     useEffect(() => {
         const middle = async () => {
-            if (!owner) {
-                const result = await fetchUser(ownerName, localStorage.getItem("token"))
+            const result = await fetchUser(ownerName, localStorage.getItem("token"))
 
-                if (result) {
-                    setOwner(result)
-                }
-                else {
-                    localStorage.clear()
-                    navigate("/")
-
-                }
+            if (result) {
+                setOwner(result)
             }
+            else {
+                setTokenExpired(true)
+            }
+            
         }
         middle()
-        if (typeof owner !== Promise && owner !== null) { setLoading(false) }
+    }, [updateCounter])
+
+    useEffect(() => {
+        if (owner) { setLoading(false) }
     }, [owner])
 
     if (!loading) {
-        console.log("loading:", loading)
         return (
             <div className='container'>
                 <Navbar />
@@ -60,7 +62,7 @@ const Friendlist = () => {
                     <div className='sub-container'>
                         <h1>Requests</h1>
                         {owner.requests.map((suitor) => (
-                            <Request suitor={suitor} owner={ownerName}/>
+                            <Request suitor={suitor} owner={ownerName} updateCounter={updateCounter} forceUpdate={forceUpdate}/>
                         ))}                     
                     </div>
                 </div>

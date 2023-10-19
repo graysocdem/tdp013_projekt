@@ -212,4 +212,4 @@ https.createServer(httpsOptions, httpsApp).listen(3443, (req, res) => { console.
 http.createServer(httpApp).listen(3000, (req, res) => { console.log("HTTP server started at port 3000") })
 // httpApp.listen(port, () => console.log(`Listening on port ${port}`)); 
 
-module.exports = httpApp
+module.exports = httpApp, httpsApp

@@ -1,12 +1,12 @@
 /*
-Session
+Session-tester
 Friend request-knappen - avkodifiera
 Livechatt
 */
 
 const assert = require('assert');
 const request = require('supertest');
-const app = require('../server/server.js'); 
+const {httpApp, httpsApp} = require('../server/server.js'); 
 const mongoose = require('mongoose');
 const User = require('../server/models/User.js');
 const Post = require('../server/models/Post.js');

@@ -19,6 +19,14 @@ const Userpage = () => {
     const [loading, setLoading] = useState(true)
     const [ownerObject, setOwner] = useState(null)
     const [friendStatus, setFriendStatus] = useState(null)
+    const [tokenExpired, setTokenExpired] = useState(false)
+
+    useEffect(() => {
+        if (tokenExpired) {
+            localStorage.clear()
+            navigate("/")
+        }
+    }, [tokenExpired])
 
     if (ownerName === visitorName) {
         console.log("equal:", ownerName, visitorName)
@@ -46,7 +54,7 @@ const Userpage = () => {
             return
         }
 
-        await fetch(`http://localhost:3000/post`, {
+        const result = await fetch(`http://localhost:3000/post`, {
             headers: {
                 "content-type": "application/json",
                 'x-access-token': localStorage.getItem("token")
@@ -54,6 +62,9 @@ const Userpage = () => {
             body: JSON.stringify({ owner: ownerName, user: visitorName, message: message, timestamp: timestamp }),
             method: "POST"
         })
+        if (!result) {
+            setTokenExpired(true)
+        }
     }
 
     const fetchFriendStatus = () => {
@@ -75,7 +86,7 @@ const Userpage = () => {
     const handleRequest = () => {
 
         if (friendStatus === "unsent") {
-            fetch(`http://localhost:3000/${ownerName}/request`, {
+            const result = fetch(`http://localhost:3000/${ownerName}/request`, {
                 headers: {
                     "content-type": "application/json",
                     'x-access-token': localStorage.getItem("token")
@@ -83,6 +94,7 @@ const Userpage = () => {
                 body: JSON.stringify({owner: ownerName, suitor: visitorName}),
                 method: "POST"
             })
+            if (!result) {setTokenExpired(true)}
             setFriendStatus("pending")
         }
 
@@ -116,15 +128,20 @@ const Userpage = () => {
                 setPosts(postsResult)
             }
             else {
-                localStorage.clear()
-                navigate("/")
+                setTokenExpired(true)
             }
         }
         middle()
     }, []);
 
     useEffect(() => {
-        const interval = setInterval(async () => setPosts( await fetchPosts(ownerName, localStorage.getItem("token"))), 1000);
+        const interval = setInterval( async () => 
+            {
+                const result = await fetchPosts(ownerName, localStorage.getItem("token"))
+                if (!result) {setTokenExpired(true)}
+                else {setPosts(result)}
+            }, 3000);
+
         return () => { clearInterval(interval) }
     }, []);
 

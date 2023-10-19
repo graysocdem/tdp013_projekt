@@ -13,6 +13,18 @@ const Homepage = () => {
     const navigate = useNavigate();
 
     const location = useLocation().pathname
+    const [posts, setPosts] = useState(null)
+    const [tokenExpired, setTokenExpired] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const ownerName = localStorage.getItem("user")
+
+    //Skickar till login när token har gått ut
+    useEffect(() => {
+        if(tokenExpired) {
+            localStorage.clear()
+            navigate("/")
+        }
+    }, [tokenExpired])
 
     useEffect(() => {
         if (location !== "/homepage")  {
@@ -25,7 +37,6 @@ const Homepage = () => {
             if (posts === null) {
                 setTokenExpired(true)
             }
-            console.log("posts:", posts)
             if (posts) {setPosts(posts.reverse())}
         }
         fetchInitialPosts()
@@ -35,11 +46,6 @@ const Homepage = () => {
         return () => {clearInterval(interval)} 
 
     }, [])
-
-    const [posts, setPosts] = useState(null)
-    const [tokenExpired, setTokenExpired] = useState(false)
-    const [loading, setLoading] = useState(true)
-    const ownerName = localStorage.getItem("user")
     
     const messageInputRef = useRef()
 
@@ -59,16 +65,11 @@ const Homepage = () => {
         if (post.message.length === 0 || post.message.length > 140) {
             alert("Invalid message length")
         }
-        else { publishPost(post) }
-    }
-
-    //Skickar till login när token har gått ut
-    useEffect(() => {
-        if(tokenExpired) {
-            localStorage.clear()
-            navigate("/")
+        else { 
+            const result = publishPost(post, localStorage.getItem("token"))
+            if (!result) {setTokenExpired(true)}
         }
-    }, [tokenExpired])
+    }
 
     //Stänger av loading när posts har laddat
     useEffect(() => {

@@ -1,4 +1,4 @@
-const fetchUser = async (user, token, navigate) => {
+const fetchUser = async (user, token) => {
 
    const response = await fetch(`http://localhost:3000/user/${user}`, {
         headers: {

@@ -5,11 +5,14 @@ const Request = (props) => {
     const handleAccept = () => {
         fetch(`http://localhost:3000/accept`, {
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                'x-access-token': localStorage.getItem("token")
             },
             body: JSON.stringify({ owner: props.owner, suitor: props.suitor }),
             method: "PATCH"
         })
+        console.log("jag körs!")
+        props.forceUpdate(1)
     }
 
     return (

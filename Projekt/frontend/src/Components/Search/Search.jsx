@@ -3,18 +3,35 @@ import "./Search.css"
 import Navbar from "../Navigation/Navbar"
 import User from "../User/User"
 import fetchUsers from '../../Scripts/fethUsers'
-
+import { useNavigate
+ } from 'react-router-dom'
 const Search = () => {
 
+    const navigate = useNavigate()
     const [users, setUsers] = useState(null)
     const [displayUsers, setDisplayUsers] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [tokenExpired, setTokenExpired] = useState(false)
+
+    useEffect(() => {
+        if (tokenExpired) {
+            localStorage.clear()
+            navigate("/")
+        }
+    }, [tokenExpired])
 
     const queryInputRef = useRef()
 
     useEffect(() => {
         const middle = async () => {
-            setUsers(await fetchUsers(localStorage.getItem("token")))
+            const result = await fetchUsers(localStorage.getItem("token"))
+
+            if (result) {
+                setUsers(result)
+            }
+            else {
+                setTokenExpired(true)
+            }
         }
         middle()
     }, []);
