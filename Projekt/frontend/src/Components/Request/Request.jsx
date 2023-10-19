@@ -7,8 +7,10 @@ const Request = (props) => {
             headers: {
                 "content-type": "application/json",
                 'x-access-token': localStorage.getItem("token")
+                "content-type": "application/json",
+                'x-access-token': localStorage.getItem('token')
             },
-            body: JSON.stringify({ owner: props.owner, suitor: props.suitor }),
+            body: JSON.stringify({ owner: props.ownerName, suitor: props.suitor }),
             method: "PATCH"
         })
         console.log("jag körs!")

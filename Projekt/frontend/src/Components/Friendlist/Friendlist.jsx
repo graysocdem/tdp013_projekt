@@ -25,6 +25,7 @@ const Friendlist = () => {
     }, [tokenExpired])
 
     useEffect(() => {
+
         const middle = async () => {
             const result = await fetchUser(ownerName, localStorage.getItem("token"))
 
