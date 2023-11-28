@@ -34,16 +34,6 @@ router.all('/:id', async (req, res) => {
     }
 })
 
-// router.all('*', (req, res) => {
-//     console.log("hejhej jag finns")
-//     if (err instanceof NotFound) {
-//         res.status(404).send("Not Found")
-//     }
-//     else {
-//         res.status(500).send("Unknown Error")
-//     }
-// })
-
 async function messagesPost(req, res) {
     const post = new Post({
         author: sanitize(req.body.author),
@@ -51,6 +41,9 @@ async function messagesPost(req, res) {
         timestamp: sanitize(req.body.timestamp),
         read: sanitize(req.body.read)
     })
+
+    if (post.message.length > 140) { res.status(413).send("Content too large") }
+    else if (post.message.length == 0) { res.status(400).send("Content too short") }
     try {
         await post.save()
         res.status(200).send("Post created");
@@ -68,10 +61,8 @@ async function messagesGet(req, res) {
     }
 }
 
-
 async function idPatch(req, res) {
     cleanID = sanitize(req.params.id)
-    console.log(req.params.id)
     if (invalidId(cleanID)) {
         res.status(400).send("Invalid parameter")
         return
@@ -111,9 +102,8 @@ async function idGet(req, res) {
 function invalidId(str) {
     if (str.length != 24) { console.log("string invalid length"); return true }
     for (i = 0; i < str.length; i++) {
-        if (invalidChar(str.charCodeAt(i))) { console.log("invalid character"); return true }
+        if (invalidChar(str.charCodeAt(i))) {  return true }
     }
-    console.log("string validated")
     return false
 }
 

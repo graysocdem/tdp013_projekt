@@ -39,14 +39,15 @@ async function savePost(authorIn, messageIn, timestampIn, readIn) {
         read: readIn
     }
 
-    fetch("http://127.0.0.1:3000/messages", {
+    if (post.message.length > 140) { return }
+
+    fetch("http://localhost:3000/messages", {
         method: "POST",
         body: JSON.stringify(post),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
-    }).then((response) => response.text())
-        .then((text) => console.log(text))
+    })
 }
 
 function showMessage(messageObject) {
@@ -114,7 +115,6 @@ function showMessage(messageObject) {
 async function toggleCheckbox(event) {
     
     const card = event.target.closest('.card');
-    console.log(card)
 
     const _id = card._id;
 
@@ -128,13 +128,12 @@ async function toggleCheckbox(event) {
     }
 
 
-    fetch(`http://127.0.0.1:3000/messages/${_id}`, {
+    fetch(`http://localhost:3000/messages/${_id}`, {
         method: "PATCH",
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
-    }).then((response) => response.text())
-      .then((text) => console.log(text))
+    })
 
 }
 
@@ -152,29 +151,24 @@ function ajaxFunction() {
 
 async function getPosts() {
     
-    const response = await fetch("http://127.0.0.1:3000/messages")
+    const response = await fetch("http://localhost:3000/messages")
     const posts = await response.json()
 
     for (i in posts) {
-        console.log(posts[i])
         showMessage(posts[i])
     }
 }
 
 async function getNewPosts() {
     
-    const response = await fetch("http://127.0.0.1:3000/messages")
+    const response = await fetch("http://localhost:3000/messages")
     const posts = await response.json()
 
     const msLastCheck = Date.parse()-5000
 
-    console.log(posts)
-
     for (i in posts) {
-        console.log()
         const msTimestamp = Date.parse(posts[i].timestamp)
         if (msTimestamp > msLastCheck) {
-            console.log(posts[i])
             showMessage(posts[i])
         }
     }
